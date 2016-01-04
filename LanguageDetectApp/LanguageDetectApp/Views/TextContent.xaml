@@ -1,0 +1,40 @@
+﻿<Page
+    x:Class="LanguageDetectApp.Views.TextContent"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LanguageDetectApp.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mv="using:LanguageDetectApp.ViewModels"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    
+    <!--<Page.Resources>
+        <m:CharacterRecognizeModel x:Key="CharacterRecognize"></m:CharacterRecognizeModel>
+    </Page.Resources>-->
+    <Page.Resources>
+        <mv:TextContentConverter x:Key="textconverter"></mv:TextContentConverter>
+    </Page.Resources>
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+
+        </Grid.RowDefinitions>
+        <TextBox Name="textContent" Grid.Row="0"  Text="{Binding PairWords, Converter={StaticResource textconverter}}" Height="560" Margin="0,10,0,0" TextWrapping="Wrap">
+
+        </TextBox>
+
+
+    </Grid>
+    <Page.BottomAppBar>
+        <CommandBar>
+            <CommandBar.PrimaryCommands>
+                <AppBarButton Label="Translate" Icon="Character"/>
+                <AppBarButton Label="Save" Icon="Save"/>
+                <AppBarButton Label="Share" Icon="OtherUser"/>
+            </CommandBar.PrimaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
+
+
+</Page>
