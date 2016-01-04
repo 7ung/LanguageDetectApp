@@ -158,6 +158,7 @@ namespace LanguageDetectApp.Common
         {
             if (frame.GetValue(FrameSessionStateKeyProperty) != null)
             {
+                return;
                 throw new InvalidOperationException("Frames can only be registered to one session state key");
             }
 

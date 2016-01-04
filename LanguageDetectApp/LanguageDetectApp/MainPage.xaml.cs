@@ -109,49 +109,99 @@ namespace LanguageDetectApp
         {
             // Hình ảnh muốn lấy được text phải dạng gray scale
             WriteableBitmap temp = ImageBehavior.GrayScale(imageModel.Image);
-
+            standardImageForRecog(ref temp);
             // Bắt đầu tính toán nhận diện chữ.
             // Pixel Width / Height phải trong khoảng 40 đến 2600
-            OcrResult result = await ocrEngine.RecognizeAsync(
-                (uint)imageModel.Image.PixelHeight,
-                (uint)imageModel.Image.PixelWidth,
-                temp.PixelBuffer.ToArray());
+            OcrResult result = null;
             try
             {
-                foreach (var item in result.Lines)
-                {
-                    foreach (var word in item.Words)
+                result = await ocrEngine.RecognizeAsync(
+                    (uint)temp.PixelHeight,
+                    (uint)temp.PixelWidth,
+                    temp.PixelBuffer.ToArray());
+            }
+            catch (Exception msg)
+            {
+                Debug.WriteLine(msg);
+                Frame.Navigate(typeof(TextContent));
+            }
+            try
+            {
+                if (result.Lines != null)
+                    foreach (var item in result.Lines)
                     {
-                        Rect bound = new Rect()
+                        if (item.Words == null)
+                            continue;
+                        foreach (var word in item.Words)
                         {
-                            X = word.Left,
-                            Y = word.Top,
-                            Width = word.Width,
-                            Height = word.Height
-                        };
+                            if (word.Text == null)
+                                continue;
+                            Rect bound = new Rect()
+                            {
+                                X = word.Left,
+                                Y = word.Top,
+                                Width = word.Width,
+                                Height = word.Height
+                            };
 
-                        CharacterRecognizeModel.PairWords.Add(
-                            new KeyValuePair<string, Rect>(word.Text, bound));
-                        Debug.WriteLine(word.Text);
+                            CharacterRecognizeModel.PairWords.Add(
+                                new KeyValuePair<string, Rect>(word.Text, bound));
+                            Debug.WriteLine(word.Text);
 
-                        // WriteableBitmap.DrawRectangle là phương thức mở rộng từ lớp WriteableBitmapExtension. của thư viện WriteableEx
-                        imageModel.Image.DrawRectangle(
-                            (int)bound.Left,
-                            (int)bound.Top,
-                            (int)bound.Right,
-                            (int)bound.Bottom,
-                            Windows.UI.Color.FromArgb(255, 110, 210, 255));
+                            // WriteableBitmap.DrawRectangle là phương thức mở rộng từ lớp WriteableBitmapExtension. của thư viện WriteableEx
+                            imageModel.Image.DrawRectangle(
+                                (int)bound.Left,
+                                (int)bound.Top,
+                                (int)bound.Right,
+                                (int)bound.Bottom,
+                                Windows.UI.Color.FromArgb(255, 110, 210, 255));
+                        }
                     }
-                }
             }
             catch (Exception msg)
             {
                 // Khi không nhận được ảnh thì quăng lỗi nên catch để tránh bị break
+                Debug.WriteLine(msg);
             }
 
             Frame.Navigate(typeof(TextContent));
 
         }
+
+        private void standardImageForRecog(ref WriteableBitmap temp)
+        {
+            int width = temp.PixelWidth;
+            int height = temp.PixelHeight;
+            bool flag = false;
+
+            if (width < 40)
+            {
+                width = 40;
+                flag = (flag == false) ? true : flag;
+            }
+            if (width > 2600)
+            {
+                flag = (flag == false) ? true : flag;
+            }
+            if (height < 40)
+            {
+                width = 40;
+                flag = (flag == false) ? true : flag;
+            }
+            if (height > 2600)
+            {
+                flag = (flag == false) ? true : flag;
+            }
+
+            if (flag == true)
+            {
+                temp = temp.Resize(
+                    width, 
+                    height, 
+                    WriteableBitmapExtensions.Interpolation.Bilinear);
+            }
+        }
+
 
     }
 

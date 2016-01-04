@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Shapes;
 
@@ -14,7 +15,7 @@ namespace LanguageDetectApp.ViewModels
         private static string _default = "No Content Found";
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var words = value as ObservableCollection<KeyValuePair<string, Rectangle>>;
+            var words = value as ObservableCollection<KeyValuePair<string, Rect>>;
             if (words == null)
             {
                 return _default;
@@ -31,7 +32,7 @@ namespace LanguageDetectApp.ViewModels
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            return new ObservableCollection<KeyValuePair<string, Rectangle>>();
+            return new ObservableCollection<KeyValuePair<string, Rect>>();
         }
     }
 }

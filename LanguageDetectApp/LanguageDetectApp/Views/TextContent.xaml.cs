@@ -30,7 +30,13 @@ namespace LanguageDetectApp.Views
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+
+            // CharacterRecognizeModel is static object 
             textContent.DataContext = ocr;
+        }
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            CharacterRecognizeModel.PairWords.Clear();
         }
     }
 }
