@@ -1,5 +1,6 @@
 ﻿using LanguageDetectApp.Common;
 using LanguageDetectApp.Model;
+using LanguageDetectApp.ViewModels;
 using LanguageDetectApp.Views;
 using System;
 using System.Collections.Generic;
@@ -34,40 +35,36 @@ namespace LanguageDetectApp
     /// </summary>
     public sealed partial class MainPage : Page, IFileOpenPickerContinuable
     {
-
         public static MainPage Current;
 
         public const string FEATURE_NAME = "Demo Detach Image";
-        ImageModel imageModel;
-        OcrEngine ocrEngine;
-                    
-
+        
+        private ImageRecognizeViewModel _imageViewModel;
+        
         List<Scenario> scenarios = new List<Scenario>
         {
         };
-
-
+        
         public List<Scenario> Scenarios
         {
             get { return this.scenarios; }
         }
-
-
+        
         public MainPage()
         {
             this.InitializeComponent();
             this.NavigationCacheMode = NavigationCacheMode.Required;
             Current = this;
-            imageModel = new ImageModel();
-            imageView.DataContext = imageModel;
-
-            ocrEngine = new OcrEngine(CharacterRecognizeModel.Language);
+            
+            // gán static resouce bên mainpage.xaml để xài
+            _imageViewModel = Resources["imageDataContext"] as ImageRecognizeViewModel; 
         }
 
         protected  override void OnNavigatedTo(NavigationEventArgs e)
         {
-        //    Frame frame = Window.Current.Content as Frame;
+            //Frame frame = Window.Current.Content as Frame;
             SuspensionManager.RegisterFrame(ScenarioFrame, "scenarioFrame");
+
             if (ScenarioFrame.Content == null)
             {
                 // When the navigation stack isn't restored navigate to the ScenarioList 
@@ -101,108 +98,59 @@ namespace LanguageDetectApp
         {
             if (args.Files.Any() == true)
 	        {
-                imageModel.Image = await Util.LoadImage(args.Files.First());
-	        }
+                imageView.Source = await Util.LoadImage(args.Files.First());
+                
+                // set lại scale nhỏ nhất
+                CaculateMinScale(true);
+            }
         }
 
         private async void WhatTheNumberButton_Click(object sender, RoutedEventArgs e)
         {
-            // Hình ảnh muốn lấy được text phải dạng gray scale
-            WriteableBitmap temp = ImageBehavior.GrayScale(imageModel.Image);
-            standardImageForRecog(ref temp);
-            // Bắt đầu tính toán nhận diện chữ.
-            // Pixel Width / Height phải trong khoảng 40 đến 2600
-            OcrResult result = null;
-            try
-            {
-                result = await ocrEngine.RecognizeAsync(
-                    (uint)temp.PixelHeight,
-                    (uint)temp.PixelWidth,
-                    temp.PixelBuffer.ToArray());
-            }
-            catch (Exception msg)
-            {
-                Debug.WriteLine(msg);
-                Frame.Navigate(typeof(TextContent));
-            }
-            try
-            {
-                if (result.Lines != null)
-                    foreach (var item in result.Lines)
-                    {
-                        if (item.Words == null)
-                            continue;
-                        foreach (var word in item.Words)
-                        {
-                            if (word.Text == null)
-                                continue;
-                            Rect bound = new Rect()
-                            {
-                                X = word.Left,
-                                Y = word.Top,
-                                Width = word.Width,
-                                Height = word.Height
-                            };
+            // crop hình
+            CropImage();
 
-                            CharacterRecognizeModel.PairWords.Add(
-                                new KeyValuePair<string, Rect>(word.Text, bound));
-                            Debug.WriteLine(word.Text);
-
-                            // WriteableBitmap.DrawRectangle là phương thức mở rộng từ lớp WriteableBitmapExtension. của thư viện WriteableEx
-                            imageModel.Image.DrawRectangle(
-                                (int)bound.Left,
-                                (int)bound.Top,
-                                (int)bound.Right,
-                                (int)bound.Bottom,
-                                Windows.UI.Color.FromArgb(255, 110, 210, 255));
-                        }
-                    }
-            }
-            catch (Exception msg)
-            {
-                // Khi không nhận được ảnh thì quăng lỗi nên catch để tránh bị break
-                Debug.WriteLine(msg);
-            }
-
+            // đọc hình
+            await _imageViewModel.RecognizeImage();
+            
             Frame.Navigate(typeof(TextContent));
-
         }
-
-        private void standardImageForRecog(ref WriteableBitmap temp)
+        
+        private void crop_Click(object sender, RoutedEventArgs e)
         {
-            int width = temp.PixelWidth;
-            int height = temp.PixelHeight;
-            bool flag = false;
+            // Crop hình
+            CropImage();
 
-            if (width < 40)
-            {
-                width = 40;
-                flag = (flag == false) ? true : flag;
-            }
-            if (width > 2600)
-            {
-                flag = (flag == false) ? true : flag;
-            }
-            if (height < 40)
-            {
-                width = 40;
-                flag = (flag == false) ? true : flag;
-            }
-            if (height > 2600)
-            {
-                flag = (flag == false) ? true : flag;
-            }
-
-            if (flag == true)
-            {
-                temp = temp.Resize(
-                    width, 
-                    height, 
-                    WriteableBitmapExtensions.Interpolation.Bilinear);
-            }
+            // Tính lại scale nhỏ nhất
+            CaculateMinScale();
         }
 
+        private void CropImage()
+        {
+            var cropRect = new Rect();
+            cropRect.X = scrollViewer.HorizontalOffset / scrollViewer.ZoomFactor;
+            cropRect.Y = scrollViewer.VerticalOffset / scrollViewer.ZoomFactor;
+            cropRect.Width = scrollViewer.ActualWidth / scrollViewer.ZoomFactor;
+            cropRect.Height = scrollViewer.ActualHeight / scrollViewer.ZoomFactor;
+            
+            // Crop hình
+            _imageViewModel.CropImage(cropRect);
+        }
+        
+        /// <summary>
+        /// Không cho tấm hình scale quá nhỏ
+        /// </summary>
+        /// <param name="setScale">Có set scale lại không</param>
+        private void CaculateMinScale(bool setScale = false)
+        {
+            var minImage = Math.Max(_imageViewModel.Image.PixelWidth, _imageViewModel.Image.PixelHeight);
+            var minView = Math.Max(scrollViewer.ActualWidth, scrollViewer.ActualHeight);
 
+            scrollViewer.MinZoomFactor = (float)minView / minImage;
+
+            if(setScale)
+                scrollViewer.ChangeView(0, 0, scrollViewer.MinZoomFactor);
+        }
     }
 
 }

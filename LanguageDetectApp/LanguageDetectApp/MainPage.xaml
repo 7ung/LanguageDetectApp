@@ -5,20 +5,42 @@
     xmlns:local="using:LanguageDetectApp"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:LanguageDetectApp.ViewModels"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <vm:ImageRecognizeViewModel x:Key="imageDataContext" ></vm:ImageRecognizeViewModel>
+    </Page.Resources>
 
     <Grid>
         <StackPanel>
             <Frame x:Name="ScenarioFrame" />
-            <Image Name="imageView" Height="480" Width="400" HorizontalAlignment="Center" Source="{Binding Image}"/>
-            
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Name="browsebtn" Content="Browse" HorizontalAlignment="Center" Click="BrowseButton_Click"/>
-                <Button Name="wtndection" Content="WTN" HorizontalAlignment="Center" Click="WhatTheNumberButton_Click"/>
-            </StackPanel>
+
+            <ScrollViewer x:Name="scrollViewer"
+                          ZoomMode="Enabled" 
+                          MaxZoomFactor="2"
+                          HorizontalScrollBarVisibility="Auto" 
+                          VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="640">
+
+                <Image  x:Name="imageView" 
+                            Source="{Binding Path=Image, Mode=TwoWay, Source={StaticResource imageDataContext}}" 
+                            RenderTransformOrigin="0.5,0.5" 
+                            HorizontalAlignment="Center" 
+                            VerticalAlignment="Center"
+                            >
+                    <Image.RenderTransform>
+                        <CompositeTransform x:Name="compositeTransform" />
+                    </Image.RenderTransform>
+                </Image>
+            </ScrollViewer>
         </StackPanel>
 
+        <!--<StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">-->
+            <Button x:Name="browsebtn" Content="..." HorizontalAlignment="Left" Click="BrowseButton_Click" Margin="10,0,0,10" VerticalAlignment="Bottom" BorderThickness="0" Width="50" MinWidth="50" FontSize="26.667" Background="#CC00F3FF" Height="75"/>
+            <Button x:Name="wtndection" Content="Recognize" HorizontalAlignment="Right" Click="WhatTheNumberButton_Click" VerticalAlignment="Bottom" Margin="0,0,10,10" BorderThickness="0" Background="#CC00F3FF" Height="75" Width="140"/>
+            <!--<Button Name="crop" Content="Crop" HorizontalAlignment="Center" Click="crop_Click"/>-->
+        <!--</StackPanel>-->
     </Grid>
-    
+
 </Page>

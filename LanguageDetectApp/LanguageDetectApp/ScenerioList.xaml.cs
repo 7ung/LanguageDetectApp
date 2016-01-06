@@ -27,10 +27,10 @@ namespace LanguageDetectApp
         public ScenarioList()
         {
             this.InitializeComponent();
-            SampleTitle.Text = MainPage.FEATURE_NAME;
+            //SampleTitle.Text = MainPage.FEATURE_NAME;
 
             // Populate the scenario list from the SampleConfiguration.cs file 
-            ScenarioControl.ItemsSource = MainPage.Current.Scenarios;
+            //ScenarioControl.ItemsSource = MainPage.Current.Scenarios;
         }
 
         private void ScenarioControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
