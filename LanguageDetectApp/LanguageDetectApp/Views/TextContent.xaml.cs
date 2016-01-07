@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using System.Runtime.Serialization.Json;
 using System.Runtime.Serialization;
 using Newtonsoft.Json.Linq;
+using LanguageDetectApp.ViewModels;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
 
@@ -31,7 +32,7 @@ namespace LanguageDetectApp.Views
     /// </summary>
     public sealed partial class TextContent : Page
     {
-        CharacterRecognizeModel ocr = new CharacterRecognizeModel();
+        TextContentViewModel _textContentVM;
 
         public TextContent()
         {
@@ -40,8 +41,7 @@ namespace LanguageDetectApp.Views
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            // CharacterRecognizeModel is static object 
-            textContent.DataContext = ocr;
+            _textContentVM = Resources["textContentSource"] as TextContentViewModel;
         }
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
@@ -51,14 +51,14 @@ namespace LanguageDetectApp.Views
         private async void translateBtn_Click(object sender, RoutedEventArgs e)
         {
             translatePanel.Visibility = Visibility.Visible;
-            translateContent.Text = await Util.Translate(textContent.Text, "en-vi");
+
+            await _textContentVM.TranslateContent();
         }
 
         private void closeTranslateBtn_Click(object sender, RoutedEventArgs e)
         {
             translatePanel.Visibility = Visibility.Collapsed;
             translateContent.Text = string.Empty;
-
             translateBtn.Focus(FocusState.Programmatic);
         }
     }

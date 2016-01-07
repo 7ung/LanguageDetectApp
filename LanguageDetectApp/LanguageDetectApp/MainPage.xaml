@@ -11,6 +11,9 @@
 
     <Page.Resources>
         <vm:ImageRecognizeViewModel x:Key="imageDataContext" ></vm:ImageRecognizeViewModel>
+
+        <vm:StateToEnableConverter x:Key="stateToEnableConverter" />
+        <vm:StateToVisibleConverter x:Key="stateToVisibleConverter" />
     </Page.Resources>
 
     <Grid>
@@ -21,7 +24,11 @@
                           ZoomMode="Enabled" 
                           MaxZoomFactor="2"
                           HorizontalScrollBarVisibility="Auto" 
-                          VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="640">
+                          VerticalScrollBarVisibility="Auto" 
+                          HorizontalContentAlignment="Center" 
+                          VerticalContentAlignment="Center" 
+                          Height="640" 
+                          IsEnabled="{Binding CurrentState, Converter={StaticResource stateToEnableConverter}, ConverterParameter=ScaleElement, Source={StaticResource imageDataContext}}">
 
                 <Image  x:Name="imageView" 
                             Source="{Binding Path=Image, Mode=TwoWay, Source={StaticResource imageDataContext}}" 
@@ -36,11 +43,30 @@
             </ScrollViewer>
         </StackPanel>
 
-        <!--<StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">-->
-            <Button x:Name="browsebtn" Content="..." HorizontalAlignment="Left" Click="BrowseButton_Click" Margin="10,0,0,10" VerticalAlignment="Bottom" BorderThickness="0" Width="50" MinWidth="50" FontSize="26.667" Background="#CC00F3FF" Height="75"/>
-            <Button x:Name="wtndection" Content="Recognize" HorizontalAlignment="Right" Click="WhatTheNumberButton_Click" VerticalAlignment="Bottom" Margin="0,0,10,10" BorderThickness="0" Background="#CC00F3FF" Height="75" Width="140"/>
-            <!--<Button Name="crop" Content="Crop" HorizontalAlignment="Center" Click="crop_Click"/>-->
-        <!--</StackPanel>-->
+        <Canvas Name="drawCanvas" ManipulationStarted="drawCanvas_ManipulationStarted" ManipulationDelta="drawCanvas_ManipulationDelta" ManipulationCompleted="drawCanvas_ManipulationCompleted" ManipulationMode="All" Visibility="{Binding CurrentState, ConverterParameter=CropElement, Converter={StaticResource stateToVisibleConverter}, Source={StaticResource imageDataContext}}">
+            <Rectangle x:Name="cropRect" Height="640" ManipulationMode="All" Fill="#33000000" StrokeThickness="2" Stroke="White" Width="400">
+                <Rectangle.RenderTransform>
+                    <CompositeTransform x:Name="cropRectTransform" />
+                </Rectangle.RenderTransform>
+            </Rectangle>
+        </Canvas>
+
+
+        <Button x:Name="browsebtn" Content="..." HorizontalAlignment="Left" Click="BrowseButton_Click" Margin="10,0,0,10" VerticalAlignment="Bottom" BorderThickness="0" Width="50" MinWidth="50" FontSize="26.667" Background="#FF1DD2AF" Height="60" Style="{StaticResource FlatStyle}" IsEnabled="{Binding CurrentState, Converter={StaticResource stateToEnableConverter}, ConverterParameter=ScaleElement, Source={StaticResource imageDataContext}}" />
+        <Button x:Name="wtndection" Content="Recognize" HorizontalAlignment="Right" Click="WhatTheNumberButton_Click" VerticalAlignment="Bottom" Margin="0,0,10,10" BorderThickness="0" Background="#FF1DD2AF" Height="60" Width="140" Style="{StaticResource FlatStyle}"/>
+        <Button x:Name="createCropRect" 
+                Content="Crop" 
+                HorizontalAlignment="Left" 
+                Click="createCropRect_Click" 
+                VerticalAlignment="Top" 
+                Margin="10,10,0,0" 
+                BorderThickness="0" 
+                Background="#FF1DD2AF" 
+                Height="50" 
+                Width="100" 
+                Style="{StaticResource FlatStyle}" MinWidth="0" MinHeight="0"/>
+
+       
     </Grid>
 
 </Page>

@@ -32,6 +32,18 @@ namespace LanguageDetectApp.ViewModels
         private ImageModel _imageModel;
         private OcrEngine _ocrEngine;
 
+        private eState _currentState = eState.Scale;
+
+        public eState CurrentState
+        {
+            get { return _currentState; }
+            set
+            {
+                _currentState = value;
+                onPropertyChanged("CurrentState");
+            }
+        }
+        
         public WriteableBitmap Image
         {
             get { return _imageModel.Image; }

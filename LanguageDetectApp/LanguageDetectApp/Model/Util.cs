@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
+using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
@@ -73,9 +74,18 @@ namespace LanguageDetectApp.Model
                     return result;
                 }
             }
+            catch (WebException ex)
+            {
+                MessageDialog dialog = new MessageDialog("Please check your network.\n" +  ex.Message, "Something wrong.");
+                await dialog.ShowAsync();
+
+                return string.Empty;
+            }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                MessageDialog dialog = new MessageDialog(ex.Message, "Error");
+                await dialog.ShowAsync();
+
                 return string.Empty;
             }
         }

@@ -30,6 +30,12 @@ using WindowsPreview.Media.Ocr;
 
 namespace LanguageDetectApp
 {
+    public enum eState
+    {
+        Crop,
+        Scale
+    }
+
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
@@ -41,6 +47,14 @@ namespace LanguageDetectApp
         
         private ImageRecognizeViewModel _imageViewModel;
         
+        // rect để tính
+        Rect _cropRect;
+        // rect để vẽ
+        Rectangle _cropDrawnRect;
+        
+        Point _startPoint;
+        Point _endPoint;
+
         List<Scenario> scenarios = new List<Scenario>
         {
         };
@@ -74,6 +88,17 @@ namespace LanguageDetectApp
                 }
             }
 
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+
+            _imageViewModel.CurrentState = eState.Scale;
+            createCropRect.Content = "Crop";
+            
+            if(_cropDrawnRect != null && drawCanvas.Children.Contains(_cropDrawnRect))
+                drawCanvas.Children.Remove(_cropDrawnRect);
         }
 
         private void BrowseButton_Click(object sender, RoutedEventArgs e)
@@ -116,25 +141,33 @@ namespace LanguageDetectApp
             Frame.Navigate(typeof(TextContent));
         }
         
-        private void crop_Click(object sender, RoutedEventArgs e)
-        {
-            // Crop hình
-            CropImage();
-
-            // Tính lại scale nhỏ nhất
-            CaculateMinScale();
-        }
-
         private void CropImage()
         {
             var cropRect = new Rect();
-            cropRect.X = scrollViewer.HorizontalOffset / scrollViewer.ZoomFactor;
-            cropRect.Y = scrollViewer.VerticalOffset / scrollViewer.ZoomFactor;
-            cropRect.Width = scrollViewer.ActualWidth / scrollViewer.ZoomFactor;
-            cropRect.Height = scrollViewer.ActualHeight / scrollViewer.ZoomFactor;
+
+            if (_imageViewModel.CurrentState == eState.Crop && _cropRect != null)
+            {
+                cropRect.X = (scrollViewer.HorizontalOffset + _cropRect.X) / scrollViewer.ZoomFactor;
+                cropRect.Y = (scrollViewer.VerticalOffset + _cropRect.Y) / scrollViewer.ZoomFactor;
+                cropRect.Width = _cropRect.Width / scrollViewer.ZoomFactor;
+                cropRect.Height = _cropRect.Height / scrollViewer.ZoomFactor;
+
+                // Crop hình
+                _imageViewModel.CropImage(cropRect);
+            }
+            else
+            {
+                cropRect.X = scrollViewer.HorizontalOffset / scrollViewer.ZoomFactor;
+                cropRect.Y = scrollViewer.VerticalOffset / scrollViewer.ZoomFactor;
+                cropRect.Width = scrollViewer.ActualWidth / scrollViewer.ZoomFactor;
+                cropRect.Height = scrollViewer.ActualHeight / scrollViewer.ZoomFactor;
+
+                // Crop hình
+                _imageViewModel.CropImage(cropRect);
+            }
             
-            // Crop hình
-            _imageViewModel.CropImage(cropRect);
+            // Tính lại scale nhỏ nhất
+            CaculateMinScale(true);
         }
         
         /// <summary>
@@ -143,14 +176,105 @@ namespace LanguageDetectApp
         /// <param name="setScale">Có set scale lại không</param>
         private void CaculateMinScale(bool setScale = false)
         {
-            var minImage = Math.Max(_imageViewModel.Image.PixelWidth, _imageViewModel.Image.PixelHeight);
-            var minView = Math.Max(scrollViewer.ActualWidth, scrollViewer.ActualHeight);
+            double ratio;
 
-            scrollViewer.MinZoomFactor = (float)minView / minImage;
+            if(_imageViewModel.Image.PixelWidth > _imageViewModel.Image.PixelHeight)
+            {
+                ratio = scrollViewer.ActualWidth / _imageViewModel.Image.PixelWidth;
+            }
+            else
+            {
+                ratio = scrollViewer.ActualHeight / _imageViewModel.Image.PixelHeight;
+            }
+            
+            scrollViewer.MinZoomFactor = (float)ratio;
 
-            if(setScale)
+            if (setScale)
                 scrollViewer.ChangeView(0, 0, scrollViewer.MinZoomFactor);
         }
+        
+        private void createCropRect_Click(object sender, RoutedEventArgs e)
+        {
+            if (_imageViewModel.CurrentState == eState.Scale)
+            {
+                _imageViewModel.CurrentState = eState.Crop;
+                createCropRect.Content = "Cancel";
+
+                _cropRect = new Rect();
+                _cropDrawnRect = new Rectangle()
+                {
+                    Fill = new SolidColorBrush(Windows.UI.Color.FromArgb(100, 255, 255, 255)),
+                    Width = _cropRect.Width,
+                    Height = _cropRect.Height
+                };
+
+                drawCanvas.Children.Add(_cropDrawnRect);
+            }
+            else
+            {
+                _imageViewModel.CurrentState = eState.Scale;
+                createCropRect.Content = "Crop";
+
+                drawCanvas.Children.Remove(_cropDrawnRect);
+            }
+        }
+        
+        private void drawCanvas_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
+        {
+            _startPoint = e.Position;
+
+            // reset rect
+            Canvas.SetLeft(_cropDrawnRect, _startPoint.X);
+            Canvas.SetTop(_cropDrawnRect, _startPoint.Y);
+            _cropDrawnRect.Width = 0;
+            _cropDrawnRect.Height = 0;
+        }
+
+        private void drawCanvas_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        {
+            _endPoint = e.Position;
+            
+            if (_startPoint.X > _endPoint.X && _startPoint.Y > _endPoint.Y)
+            {
+                _cropRect.X = _endPoint.X;
+                _cropRect.Width = _startPoint.X - _endPoint.X;
+                _cropRect.Y = _endPoint.Y;
+                _cropRect.Height = _startPoint.Y - _endPoint.Y;
+            }
+            else if (_startPoint.X < _endPoint.X && _startPoint.Y < _endPoint.Y)
+            {
+                _cropRect.X = _startPoint.X;
+                _cropRect.Width = _endPoint.X - _startPoint.X;
+                _cropRect.Y = _startPoint.Y;
+                _cropRect.Height = _endPoint.Y - _startPoint.Y;
+            }
+            else if (_startPoint.X > _endPoint.X && _startPoint.Y < _endPoint.Y)
+            {
+                _cropRect.X = _endPoint.X;
+                _cropRect.Width = _startPoint.X - _endPoint.X;
+                _cropRect.Y = _startPoint.Y;
+                _cropRect.Height = _endPoint.Y - _startPoint.Y;
+            }
+            else if (_startPoint.X < _endPoint.X && _startPoint.Y > _endPoint.Y)
+            {
+                _cropRect.X = _startPoint.X;
+                _cropRect.Width = _endPoint.X - _startPoint.X;
+                _cropRect.Y = _endPoint.Y;
+                _cropRect.Height = _startPoint.Y - _endPoint.Y;
+            }
+
+            _cropDrawnRect.Width = _cropRect.Width;
+            _cropDrawnRect.Height = _cropRect.Height;
+
+            Canvas.SetLeft(_cropDrawnRect, _cropRect.Left);
+            Canvas.SetTop(_cropDrawnRect, _cropRect.Top);
+        }
+
+        private void drawCanvas_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
+        {
+            
+        }
+        
     }
 
 }
