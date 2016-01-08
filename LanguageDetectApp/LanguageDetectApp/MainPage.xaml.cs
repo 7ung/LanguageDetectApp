@@ -87,7 +87,6 @@ namespace LanguageDetectApp
                     throw new Exception("Failed to create scenario list");
                 }
             }
-
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -123,6 +122,7 @@ namespace LanguageDetectApp
         {
             if (args.Files.Any() == true)
 	        {
+                _imageViewModel.Path = args.Files.First().Path;
                 imageView.Source = await Util.LoadImage(args.Files.First());
                 
                 // set lại scale nhỏ nhất

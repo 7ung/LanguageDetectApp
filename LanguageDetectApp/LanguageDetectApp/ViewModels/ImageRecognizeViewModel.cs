@@ -33,6 +33,16 @@ namespace LanguageDetectApp.ViewModels
         private OcrEngine _ocrEngine;
 
         private eState _currentState = eState.Scale;
+        
+        public string Path
+        {
+            get { return _imageModel.Path; }
+            set
+            {
+                _imageModel.Path = value;
+                onPropertyChanged("Path");
+            }
+        }
 
         public eState CurrentState
         {
