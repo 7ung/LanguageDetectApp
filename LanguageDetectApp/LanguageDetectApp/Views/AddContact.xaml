@@ -1,0 +1,111 @@
+﻿<Page
+    x:Class="LanguageDetectApp.Views.AddContact"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LanguageDetectApp.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:LanguageDetectApp.ViewModels"
+    xmlns:sys="using:System"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <vm:PageCollapsedConverter x:Key="pagecollapsed"></vm:PageCollapsedConverter>
+        <!--<sys:String x:Key="string"></sys:String>-->
+        <!--<sys:DateTime x:Key="datetime"></sys:DateTime>-->
+    </Page.Resources>
+    <Grid>
+        <ScrollViewer HorizontalScrollMode="Disabled" >
+            <StackPanel Name="fullstackpanel" >
+                <Frame x:Name="ScenarioFrame" />
+                <StackPanel Orientation="Horizontal">
+                    <Image Name="thumbnail" Stretch="Fill"
+                       Width="160" Height="160" HorizontalAlignment="Left" 
+                           />
+                    <Button Name="btnAddImg" VerticalAlignment="Bottom" Click="AddImageClick" >
+                        <Image Width="50" Height="50"
+                               Source="ms-appx:///Assets/612952.jpg" Stretch="Fill">
+                            
+                        </Image>
+                    </Button>
+                </StackPanel>
+                <Button HorizontalAlignment="Stretch" Name="CollapseBtn"
+                        Click="CollapseBtnClick">
+                    <Image Height="30" Source="ms-appx:///Assets/11205981_827335904025618_783659537277089402_n.jpg" Stretch="Fill"
+                           
+                           />
+                </Button>
+                <!--<TextBlock Name="txtblockName" Text="Name"/>-->
+                <TextBox Name="txtboxName" Header="Name"
+                         Text="{Binding GivenName, Mode=TwoWay, TargetNullValue=''}"/>
+              
+                <!--<TextBlock Name="txtblockFamilyName" Text="Family Name"/>-->
+                <TextBox Name="txtboxFamilyName" Header="Family Name" 
+                         Text="{Binding FamilyName, Mode=TwoWay, TargetNullValue=''}"  
+                         Visibility="{Binding PageCollapsed, Converter={StaticResource pagecollapsed}}" Margin="30,0,0,0" />
+                
+                <!--<TextBlock Name="txtblockNickName" Text="Nick Name"/>-->
+                <TextBox Name="txtboxNickName" Header="Nick Name"
+                         Text="{Binding Nickname,Mode=TwoWay, TargetNullValue=''}" 
+                         Visibility="{Binding PageCollapsed, Converter={StaticResource pagecollapsed}}" Margin="30,0,0,0"  />
+                
+                <!--<TextBlock Name="txtblockMobile" Text="Mobile"/>-->
+                <TextBox Name="txtBlockMobile" Header="Mobile"
+                         Text="{Binding Mobilephone,Mode=TwoWay, TargetNullValue=''}" 
+                         InputScope="Number"/>
+
+                <!--<TextBlock Name="txtblockAltMobile" Text="Alternate Mobile"/>-->
+                <TextBox Name="txtBlockAltMobile" Header="Alternate Mobile"
+                         Text="{Binding AlternateMobilePhone,Mode=TwoWay, TargetNullValue=''}"  
+                         InputScope="Number"  
+                         Visibility="{Binding PageCollapsed, Converter={StaticResource pagecollapsed}}" Margin="30,0,0,0" />
+
+                <!--<TextBlock Name="txtblockPhone" Text="Home Phone"/>-->
+                <TextBox Name="txtboxPhone" Header="Home Phone"
+                         Text="{Binding Telephone,Mode=TwoWay, TargetNullValue=''}" 
+                         InputScope="Number"  
+                         Visibility="{Binding PageCollapsed, Converter={StaticResource pagecollapsed}}" Margin="30,0,0,0" />
+
+                <TextBox Name="txtBlockEmail" Header="Email"
+                         Text="{Binding Email,Mode=TwoWay, TargetNullValue=''}" 
+                         InputScope="EmailSmtpAddress"/>
+
+                <!--<TextBlock Name="txtblockBirthDay" Text="Birthday"/>-->
+                <DatePicker Name="dtPickerBirthDay" 
+                            Header="Birthday"
+                            Date="{Binding Birthday, Mode=TwoWay}" d:IsHidden="True" />
+                
+                <!--<TextBlock Name="txtblockAddress" Text="Address"/>-->
+                <TextBox Name="txtboxAddress"
+                         Header="Address"
+                         Text="{Binding Address,Mode=TwoWay, TargetNullValue=''}" 
+                         />
+
+                <!--<TextBlock Name="txtblockStreet" Text="Street"/>-->
+                <TextBox Name="txtboxStreet" 
+                         Header="Street"
+                         Text="{Binding Street,Mode=TwoWay, TargetNullValue=''}" 
+                         Visibility="{Binding PageCollapsed, Converter={StaticResource pagecollapsed}}" Margin="30,0,0,0"  />
+
+                <!--<TextBlock Name="txtblockRegion" Text="Region/State"/>-->
+                <TextBox Name="txtboxRegion" Header="Region/State"
+                         Text="{Binding Region,Mode=TwoWay, TargetNullValue=''}" 
+                         Visibility="{Binding PageCollapsed, Converter={StaticResource pagecollapsed}}" Margin="30,0,0,0"  />
+                <!--<TextBlock Name="txtblockCountry" Text="Country"/>-->
+                <TextBox Name="txtboxCountry" Header="Country"
+                         Text="{Binding Country,Mode=TwoWay, TargetNullValue=''}" 
+                         Visibility="{Binding PageCollapsed, Converter={StaticResource pagecollapsed}}" Margin="30,0,0,0"  />
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+
+    <Page.BottomAppBar>
+        <CommandBar>
+            <CommandBar.PrimaryCommands>
+                <AppBarButton Label="Save" Icon="Save" Click="SaveClick"/>
+                <AppBarButton Label="Share" Icon="OtherUser"/>
+            </CommandBar.PrimaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
+</Page>

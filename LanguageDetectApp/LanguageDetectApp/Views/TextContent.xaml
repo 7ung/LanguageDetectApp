@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:LanguageDetectApp.ViewModels"
     mc:Ignorable="d" Background="#FF1ABC9C">
-
+    
     <!--<Page.Resources>
         <m:CharacterRecognizeModel x:Key="CharacterRecognize"></m:CharacterRecognizeModel>
     </Page.Resources>-->
@@ -45,8 +45,8 @@
                     VerticalAlignment="Top" HorizontalAlignment="Right"
                     BorderThickness="0" 
                     FontSize="26" Click="closeTranslateBtn_Click" Style="{StaticResource FlatStyle}" Height="50" MinHeight="0" MinWidth="0" Width="60" />
-            
-        </Grid>
+
+    </Grid>
     </Grid>
     <Page.BottomAppBar>
         <CommandBar>
@@ -55,6 +55,11 @@
                 <AppBarButton x:Name="saveBtn" Label="Save" Icon="Save"/>
                 <AppBarButton Label="Share" Icon="OtherUser"/>
             </CommandBar.PrimaryCommands>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Label="Share" Click="ShareFacebookClick"/>
+                <AppBarButton Label="addContact" Click="addContactClick"/>
+
+            </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.BottomAppBar>
 

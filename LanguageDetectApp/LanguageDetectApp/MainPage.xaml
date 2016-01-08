@@ -19,7 +19,7 @@
     <Grid>
         <StackPanel>
             <Frame x:Name="ScenarioFrame" />
-
+            
             <ScrollViewer x:Name="scrollViewer"
                           ZoomMode="Enabled" 
                           MaxZoomFactor="2"
@@ -68,5 +68,5 @@
 
        
     </Grid>
-
+    
 </Page>

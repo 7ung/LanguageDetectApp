@@ -2,14 +2,17 @@
 using LanguageDetectApp.Model;
 using LanguageDetectApp.ViewModels;
 using LanguageDetectApp.Views;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
+using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
@@ -74,9 +77,15 @@ namespace LanguageDetectApp
             _imageViewModel = Resources["imageDataContext"] as ImageRecognizeViewModel; 
         }
 
-        protected  override void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            //Frame frame = Window.Current.Content as Frame;
+           // var dt = DateTime.Now.TimeOfDay.TotalMilliseconds;
+          //  var language = await CharacterRecognizeModel.InitLanguage();
+           // System.Diagnostics.Debug.WriteLine((DateTime.Now.TimeOfDay.TotalMilliseconds - dt).ToString());
+         
+         //   ocrEngine = new OcrEngine(language);
+        //    Debug.WriteLine(language.ToString());
+        //    Frame frame = Window.Current.Content as Frame;
             SuspensionManager.RegisterFrame(ScenarioFrame, "scenarioFrame");
 
             if (ScenarioFrame.Content == null)

@@ -11,17 +11,22 @@ using Windows.UI.Xaml.Shapes;
 
 namespace LanguageDetectApp.ViewModels
 {
-    class TextContentConverter : IValueConverter
+    public class TextContentConverter : IValueConverter
     {
+        #region Private Attribute
         private static string _default = "No Content Found";
+        #endregion
+
         public object Convert(object value, Type targetType, object parameter, string language)
         {
+            #region Stuff
             var words = value as ObservableCollection<KeyValuePair<string, Rect>>;
             if (words == null)
             {
                 return _default;
             }
             string temp = String.Empty;
+            #endregion
             var listwords = words.ToList().Select(word => word.Key);
             if (listwords.Any())
 	        {
