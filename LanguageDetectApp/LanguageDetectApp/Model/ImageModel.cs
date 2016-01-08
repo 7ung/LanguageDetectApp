@@ -11,7 +11,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace LanguageDetectApp.Model
 {
-    class ImageModel : INotifyPropertyChanged
+    public class ImageModel : INotifyPropertyChanged
     {
         #region Private Attributes
         private WriteableBitmap _image;

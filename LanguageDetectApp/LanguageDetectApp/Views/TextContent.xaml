@@ -5,34 +5,54 @@
     xmlns:local="using:LanguageDetectApp.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:mv="using:LanguageDetectApp.ViewModels"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    xmlns:vm="using:LanguageDetectApp.ViewModels"
+    mc:Ignorable="d" Background="#FF1ABC9C">
     
     <!--<Page.Resources>
         <m:CharacterRecognizeModel x:Key="CharacterRecognize"></m:CharacterRecognizeModel>
     </Page.Resources>-->
+    
     <Page.Resources>
-        <mv:TextContentConverter x:Key="textconverter"></mv:TextContentConverter>
+        <vm:TextContentConverter x:Key="textconverter"></vm:TextContentConverter>
+        <vm:TextContentViewModel x:Key="textContentSource"/>
+        <vm:VisibilityConverter x:Key="visibilityConverter" />
     </Page.Resources>
-    <Grid Margin="0,0.333,0,297.667" >
+    
+    <Grid >
         <Grid.RowDefinitions>
-            <RowDefinition></RowDefinition>
-
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
+
         <TextBox Name="textContent" 
-                 Text="{Binding PairWords, Converter={StaticResource textconverter}}" 
-                 Height="560" Margin="0,10,0,0" TextWrapping="Wrap" Grid.Row="0"  >
+                 Grid.Row="0"  
+                 Text="{Binding Path=Content, Mode=TwoWay, Source={StaticResource textContentSource}}" 
+                 TextWrapping="Wrap" 
+                 VerticalAlignment="Stretch"
+                 Margin="10,20,10,10" Header="Content" Background="#FFECF0F1" BorderThickness="0" />
 
-        </TextBox>
-        <Image Name="image" Margin="0,281,0,-281.333"></Image>
+        <Grid Name="translatePanel" Grid.Row="1" Height="Auto" Margin="10,0,10,10" Visibility="Collapsed">
+            <ProgressBar x:Name="translateProgress" Height="5" VerticalAlignment="Top" Foreground="White" Background="{x:Null}" Style="{StaticResource ProgressBarStyle}" IsIndeterminate="{Binding IsTranslating, Source={StaticResource textContentSource}}" />
 
+            <TextBox Name="translateContent" 
+                     Grid.Row="1"  
+                     Text="{Binding TranslatedContent, Mode=TwoWay, Source={StaticResource textContentSource}}" 
+                     Margin="0,25,0,0" TextWrapping="Wrap" 
+                     VerticalAlignment="Stretch"
+                     Height="250" Header="Translate"
+                     />
+            <Button x:Name="closeTranslateBtn" Content="x" Grid.Row="1" 
+                    VerticalAlignment="Top" HorizontalAlignment="Right"
+                    BorderThickness="0" 
+                    FontSize="26" Click="closeTranslateBtn_Click" Style="{StaticResource FlatStyle}" Height="50" MinHeight="0" MinWidth="0" Width="60" />
+
+    </Grid>
     </Grid>
     <Page.BottomAppBar>
         <CommandBar>
             <CommandBar.PrimaryCommands>
-                <AppBarButton Label="Translate" Icon="Character"/>
-                <AppBarButton Label="Save" Icon="Save"/>
+                <AppBarButton x:Name="translateBtn" Label="Translate" Icon="Character" Click="translateBtn_Click"/>
+                <AppBarButton x:Name="saveBtn" Label="Save" Icon="Save"/>
                 <AppBarButton Label="Share" Icon="OtherUser"/>
             </CommandBar.PrimaryCommands>
             <CommandBar.SecondaryCommands>

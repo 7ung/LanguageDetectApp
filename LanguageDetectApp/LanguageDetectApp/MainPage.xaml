@@ -5,22 +5,68 @@
     xmlns:local="using:LanguageDetectApp"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:LanguageDetectApp.ViewModels"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <vm:ImageRecognizeViewModel x:Key="imageDataContext" ></vm:ImageRecognizeViewModel>
+
+        <vm:StateToEnableConverter x:Key="stateToEnableConverter" />
+        <vm:StateToVisibleConverter x:Key="stateToVisibleConverter" />
+    </Page.Resources>
 
     <Grid>
         <StackPanel>
             <Frame x:Name="ScenarioFrame" />
-            <Image Name="imageView" 
-                   Source="{Binding Image}"
-                   Height="480" Width="400" HorizontalAlignment="Center"/>
             
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Name="browsebtn" Content="Browse" HorizontalAlignment="Center" Click="BrowseButton_Click"/>
-                <Button Name="wtndection" Content="WTN" HorizontalAlignment="Center" Click="WhatTheNumberButton_Click"/>
-            </StackPanel>
+            <ScrollViewer x:Name="scrollViewer"
+                          ZoomMode="Enabled" 
+                          MaxZoomFactor="2"
+                          HorizontalScrollBarVisibility="Auto" 
+                          VerticalScrollBarVisibility="Auto" 
+                          HorizontalContentAlignment="Center" 
+                          VerticalContentAlignment="Center" 
+                          Height="640" 
+                          IsEnabled="{Binding CurrentState, Converter={StaticResource stateToEnableConverter}, ConverterParameter=ScaleElement, Source={StaticResource imageDataContext}}">
+
+                <Image  x:Name="imageView" 
+                            Source="{Binding Path=Image, Mode=TwoWay, Source={StaticResource imageDataContext}}" 
+                            RenderTransformOrigin="0.5,0.5" 
+                            HorizontalAlignment="Center" 
+                            VerticalAlignment="Center"
+                            >
+                    <Image.RenderTransform>
+                        <CompositeTransform x:Name="compositeTransform" />
+                    </Image.RenderTransform>
+                </Image>
+            </ScrollViewer>
         </StackPanel>
 
+        <Canvas Name="drawCanvas" ManipulationStarted="drawCanvas_ManipulationStarted" ManipulationDelta="drawCanvas_ManipulationDelta" ManipulationCompleted="drawCanvas_ManipulationCompleted" ManipulationMode="All" Visibility="{Binding CurrentState, ConverterParameter=CropElement, Converter={StaticResource stateToVisibleConverter}, Source={StaticResource imageDataContext}}">
+            <Rectangle x:Name="cropRect" Height="640" ManipulationMode="All" Fill="#33000000" StrokeThickness="2" Stroke="White" Width="400">
+                <Rectangle.RenderTransform>
+                    <CompositeTransform x:Name="cropRectTransform" />
+                </Rectangle.RenderTransform>
+            </Rectangle>
+        </Canvas>
+
+
+        <Button x:Name="browsebtn" Content="..." HorizontalAlignment="Left" Click="BrowseButton_Click" Margin="10,0,0,10" VerticalAlignment="Bottom" BorderThickness="0" Width="50" MinWidth="50" FontSize="26.667" Background="#FF1DD2AF" Height="60" Style="{StaticResource FlatStyle}" IsEnabled="{Binding CurrentState, Converter={StaticResource stateToEnableConverter}, ConverterParameter=ScaleElement, Source={StaticResource imageDataContext}}" />
+        <Button x:Name="wtndection" Content="Recognize" HorizontalAlignment="Right" Click="WhatTheNumberButton_Click" VerticalAlignment="Bottom" Margin="0,0,10,10" BorderThickness="0" Background="#FF1DD2AF" Height="60" Width="140" Style="{StaticResource FlatStyle}"/>
+        <Button x:Name="createCropRect" 
+                Content="Crop" 
+                HorizontalAlignment="Left" 
+                Click="createCropRect_Click" 
+                VerticalAlignment="Top" 
+                Margin="10,10,0,0" 
+                BorderThickness="0" 
+                Background="#FF1DD2AF" 
+                Height="50" 
+                Width="100" 
+                Style="{StaticResource FlatStyle}" MinWidth="0" MinHeight="0"/>
+
+       
     </Grid>
     
 </Page>

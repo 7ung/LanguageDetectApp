@@ -19,6 +19,16 @@ using Windows.Phone.PersonalInformation;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Net;
+using System.Threading;
+using System.Diagnostics;
+using System.Text;
+using System.Threading.Tasks;
+using System.Runtime.Serialization.Json;
+using System.Runtime.Serialization;
+using Newtonsoft.Json.Linq;
+using LanguageDetectApp.ViewModels;
+
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
 
 namespace LanguageDetectApp.Views
@@ -28,22 +38,15 @@ namespace LanguageDetectApp.Views
     /// </summary>
     public sealed partial class TextContent : Page
     {
-        CharacterRecognizeModel ocr = new CharacterRecognizeModel();
+        TextContentViewModel _textContentVM;
 
-
-        ImageModel _imageModel;
         public TextContent()
         {
             this.InitializeComponent();
         }
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            _imageModel = e.Parameter as ImageModel;
-            image.Source = _imageModel.Image;
-            // CharacterRecognizeModel is static object 
-
-            textContent.DataContext = ocr;
-            
+            _textContentVM = Resources["textContentSource"] as TextContentViewModel;
             initShareUI();
         }
 
@@ -144,6 +147,7 @@ namespace LanguageDetectApp.Views
             if (listemail.Any())
             {
                 return listemail.OrderByDescending(email => email.Key.Length).First().Key;
+
             }
             return String.Empty;
         }
@@ -179,6 +183,21 @@ namespace LanguageDetectApp.Views
             }
             return String.Empty;
         }
+
+        private async void translateBtn_Click(object sender, RoutedEventArgs e)
+        {
+            translatePanel.Visibility = Visibility.Visible;
+
+            await _textContentVM.TranslateContent();
+        }
+
+        private void closeTranslateBtn_Click(object sender, RoutedEventArgs e)
+        {
+            translatePanel.Visibility = Visibility.Collapsed;
+            translateContent.Text = string.Empty;
+            translateBtn.Focus(FocusState.Programmatic);
+        }
     }
  
+
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Shapes;
 
@@ -38,6 +39,27 @@ namespace LanguageDetectApp.ViewModels
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             return new ObservableCollection<KeyValuePair<string, Rect>>();
+        }
+    }
+
+    public class VisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if((bool)value)
+            {
+                return Visibility.Visible;
+            }
+            else
+            {
+                return Visibility.Collapsed;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            //throw new NotImplementedException();
+            return false;
         }
     }
 }
