@@ -31,6 +31,11 @@ namespace LanguageDetectApp.Model
         #endregion
         public static string GGApiCheckCoord = "http://maps.googleapis.com/maps/api/geocode/json?latlng=latitude,longitude";
 
+        public static string YandexTranslateQuery = "https://translate.yandex.net/api/v1.5/tr.json/translate?key={0}&text={1}&lang={2}";
+
+        private static string YandexAPIKey = "trnsl.1.1.20160106T143429Z.e255279ccf4f6c1f.2d1e4c6ed478b5dae506c464a2dd1be9a37b904c";
+
+
         public static Dictionary<string, OcrLanguage> AvailableCountries = new Dictionary<string, OcrLanguage>()
         {
             {"CN",OcrLanguage.ChineseTraditional},
@@ -64,11 +69,9 @@ namespace LanguageDetectApp.Model
             string msg = string.Empty;
             try
             {
-                string yandexAPIKey = "trnsl.1.1.20160106T143429Z.e255279ccf4f6c1f.2d1e4c6ed478b5dae506c464a2dd1be9a37b904c";
-                
                 var uri = string.Format(
-                                    "https://translate.yandex.net/api/v1.5/tr.json/translate?key={0}&text={1}&lang={2}",
-                                    yandexAPIKey, text, lang);
+                    Util.YandexTranslateQuery, Util.YandexAPIKey,
+                    text, lang);
 
                 WebRequest webRequest = WebRequest.Create(uri);
                 webRequest.Method = "POST";
@@ -115,17 +118,16 @@ namespace LanguageDetectApp.Model
                 MessageDialog dialog = new MessageDialog("Please check your network.\n" + msg, "Something wrong.");
                 await dialog.ShowAsync();
 
-                //return string.Empty;
             }
             else if (flagstatus == 2)
             {
                 MessageDialog dialog = new MessageDialog(msg, "Error");
                 await dialog.ShowAsync();
 
-                //return string.Empty;
             }
             return string.Empty;
         }
+
         /// <summary>
         /// Lấy toạ độ địa lý
         /// </summary>

@@ -18,14 +18,9 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.Phone.PersonalInformation;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Net;
-using System.Threading;
 using System.Diagnostics;
 using System.Text;
-using System.Threading.Tasks;
 using System.Runtime.Serialization.Json;
-using System.Runtime.Serialization;
 using Newtonsoft.Json.Linq;
 using LanguageDetectApp.ViewModels;
 
@@ -82,7 +77,6 @@ namespace LanguageDetectApp.Views
 
         }
 
-
         private async void ShareFacebookClick(object sender, RoutedEventArgs e)
         {
             try
@@ -108,13 +102,13 @@ namespace LanguageDetectApp.Views
             CharacterRecognizeModel.PairWords.Clear();
         }
 
-        private async void addContactClick(object sender, RoutedEventArgs e)
+        private void addContactClick(object sender, RoutedEventArgs e)
         {
             Regex regex = new Regex("\\d+");
             Regex whitespace = new Regex("[ ()-.]");
 
             // format lại chuỗi: xoá các khoảng trắng các dấu
-            string temp = whitespace.Replace(textContent.Text, String.Empty);
+            string temp = whitespace.Replace(_textContentVM.Content, String.Empty);
             MatchCollection matches = regex.Matches(temp);
 
             List<string> listPhoneNumber = new List<string>();

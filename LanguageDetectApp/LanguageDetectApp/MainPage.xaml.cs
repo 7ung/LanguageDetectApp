@@ -78,7 +78,7 @@ namespace LanguageDetectApp
             _imageViewModel = Resources["imageDataContext"] as ImageRecognizeViewModel; 
         }
 
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
            // var dt = DateTime.Now.TimeOfDay.TotalMilliseconds;
           //  var language = await CharacterRecognizeModel.InitLanguage();

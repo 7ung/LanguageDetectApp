@@ -81,12 +81,21 @@ namespace LanguageDetectApp.ViewModels
 
         public void GetContent()
         {
-            Content = String.Join(" ", CharacterRecognizeModel.PairWords.ToList().Select(word => word.Key));
-
-            if(Content == string.Empty)
+            if (CharacterRecognizeModel.PairWords.Any())
             {
-                Content = "No Content Found.";
+                // Warning
+                Content = String.Join(" ", CharacterRecognizeModel.PairWords.ToList().Select(word => word.Key));
+
+                if (Content == string.Empty)
+                {
+                    Content = "No Content Found.";
+                }
             }
+            else
+            {
+                Content = string.Empty;
+            }
+
         }
 
 

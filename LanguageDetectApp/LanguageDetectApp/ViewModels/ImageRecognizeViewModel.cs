@@ -15,6 +15,7 @@ namespace LanguageDetectApp.ViewModels
 {
     public class ImageRecognizeViewModel : INotifyPropertyChanged
     {
+        #region Constructor
         public ImageRecognizeViewModel()
         {
             _ocrEngine = new OcrEngine(OcrLanguage.English);
@@ -26,21 +27,24 @@ namespace LanguageDetectApp.ViewModels
             _ocrEngine = new OcrEngine(language);
             _imageModel = new ImageModel();
         }
+        #endregion
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
+        #region Private Attributes
         private ImageModel _imageModel;
+
+        //ref : https://msdn.microsoft.com/en-us/library/windows/apps/windows.media.ocr.aspx
         private OcrEngine _ocrEngine;
 
         private eState _currentState = eState.Scale;
+        #endregion
 
+        #region Property
         public eState CurrentState
         {
             get { return _currentState; }
             set
             {
-                _currentState = value;
-                onPropertyChanged("CurrentState");
+                SetProperty<eState>(ref _currentState, value, "CurrentState");
             }
         }
         
@@ -48,8 +52,12 @@ namespace LanguageDetectApp.ViewModels
         {
             get { return _imageModel.Image; }
             set {
-                _imageModel.Image = value;
-                onPropertyChanged("Image");
+                if (_imageModel.Image != value)
+                {
+                    _imageModel.Image = value;
+                    onPropertyChanged("Image");                   
+                }
+
             }
         }
 
@@ -58,11 +66,17 @@ namespace LanguageDetectApp.ViewModels
             get { return _ocrEngine.Language; }
             set
             {
-                _ocrEngine.Language = value;
-                onPropertyChanged("Language");
+                if (_ocrEngine.Language != value)
+                {
+                    _ocrEngine.Language = value;
+                    onPropertyChanged("Language");                   
+                }
+
             }
         }
+        #endregion
 
+        #region Method
         public void CropImage(Rect rect)
         {
             Image = Image.Crop(rect);
@@ -167,6 +181,10 @@ namespace LanguageDetectApp.ViewModels
                 Debug.WriteLine(msg);
             }
         }
+        #endregion
+
+        #region Event
+        public event PropertyChangedEventHandler PropertyChanged;
 
         private void onPropertyChanged(string propertyName)
         {
@@ -175,5 +193,17 @@ namespace LanguageDetectApp.ViewModels
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+
+        private bool SetProperty<T>(ref T field, T value, string propertyName)
+        {
+            if (Object.Equals(field, value) == true)
+            {
+                return false;
+            }
+            field = value;
+            onPropertyChanged(propertyName);
+            return true;
+        }
+        #endregion
     }
 }
