@@ -21,10 +21,18 @@
         </m3:DefaultTile>
         <m3:SplashScreen Image="Assets\SplashScreen.png" />
       </m3:VisualElements>
+      <Extensions>
+        <Extension Category="windows.protocol">
+          <Protocol Name="msft-89eb781b22c94fe9b9eb2df2240cfd5f" />
+        </Extension>
+      </Extensions>
     </Application>
   </Applications>
   <Capabilities>
     <Capability Name="internetClientServer" />
     <Capability Name="picturesLibrary" />
+    <Capability Name="sharedUserCertificates" />
+    <m3:Capability Name="contacts" />
+    <DeviceCapability Name="location" />
   </Capabilities>
 </Package>

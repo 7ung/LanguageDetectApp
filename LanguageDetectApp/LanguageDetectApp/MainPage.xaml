@@ -11,7 +11,9 @@
     <Grid>
         <StackPanel>
             <Frame x:Name="ScenarioFrame" />
-            <Image Name="imageView" Height="480" Width="400" HorizontalAlignment="Center" Source="{Binding Image}"/>
+            <Image Name="imageView" 
+                   Source="{Binding Image}"
+                   Height="480" Width="400" HorizontalAlignment="Center"/>
             
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button Name="browsebtn" Content="Browse" HorizontalAlignment="Center" Click="BrowseButton_Click"/>

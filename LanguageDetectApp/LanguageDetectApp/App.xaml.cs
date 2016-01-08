@@ -1,4 +1,5 @@
 ﻿using LanguageDetectApp.Common;
+using LanguageDetectApp.Views;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +10,9 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Phone.PersonalInformation;
 using Windows.Phone.UI.Input;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -31,6 +34,10 @@ namespace LanguageDetectApp
     public sealed partial class App : Application
     {
         public ContinuationManager ContinuationManager { get; private set; }
+
+        public static ContactStore ContactStore;
+
+        public static RemoteIdHelper RemoteIdHelper;
 
         private TransitionCollection transitions;
 
@@ -62,7 +69,7 @@ namespace LanguageDetectApp
         /// search results, and so forth.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
@@ -116,8 +123,44 @@ namespace LanguageDetectApp
                 }
             }
 
+            await initContactStore();
+
             // Ensure the current window is active
             Window.Current.Activate();
+        }
+
+        private async Task initContactStore()
+        {
+            // Khởi tạo Id để có thể generate thành Id của Contact trên Store khi sync 
+            App.ContactStore = await Windows.Phone.PersonalInformation.ContactStore.CreateOrOpenAsync(
+                ContactStoreSystemAccessMode.ReadWrite,
+                ContactStoreApplicationAccessMode.LimitedReadOnly);
+
+            App.RemoteIdHelper = new RemoteIdHelper();
+            await RemoteIdHelper.SetRemoteIdGuid(App.ContactStore);
+        }
+
+        private async Task CheckAllowGPS()
+        {
+            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            if (localSettings.Values.ContainsKey("AllowsGPS")== false)
+            {
+                MessageDialog msgbox = new MessageDialog("Mày có cho tao xài GPS không");
+                msgbox.Commands.Add(new UICommand("No") { Id = 0 });
+                msgbox.Commands.Add(new UICommand("Yes") { Id = 1 });
+
+               var result =  await msgbox.ShowAsync() as UICommand;
+               int id = Convert.ToInt32(result.Id);
+               switch (id)
+               {
+                   case 1:
+                       localSettings.Values["AllowsGPS"] = true;
+                       break;
+                   default:
+                       localSettings.Values["AllowsGPS"] = false;
+                       break;
+               }
+            }
         }
 
         /// <summary>
@@ -149,8 +192,8 @@ namespace LanguageDetectApp
             var continuationEventArgs = e as IContinuationActivatedEventArgs;
             if (continuationEventArgs != null)
             {
-                Frame scenarioFrame = MainPage.Current.FindName("ScenarioFrame") as Frame;
-                if (scenarioFrame != null)
+                //Frame scenarioFrame = MainPage.Current.FindName("ScenarioFrame") as Frame;
+                if (rootFrame != null)
                 {
                     // Call ContinuationManager to handle continuation activation
                     ContinuationManager.Continue(continuationEventArgs, rootFrame);

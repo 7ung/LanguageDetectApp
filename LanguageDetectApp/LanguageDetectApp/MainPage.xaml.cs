@@ -1,14 +1,17 @@
 ﻿using LanguageDetectApp.Common;
 using LanguageDetectApp.Model;
 using LanguageDetectApp.Views;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
+using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
@@ -44,6 +47,7 @@ namespace LanguageDetectApp
 
         List<Scenario> scenarios = new List<Scenario>
         {
+
         };
 
 
@@ -59,13 +63,19 @@ namespace LanguageDetectApp
             this.NavigationCacheMode = NavigationCacheMode.Required;
             Current = this;
             imageModel = new ImageModel();
+
             imageView.DataContext = imageModel;
 
-            ocrEngine = new OcrEngine(CharacterRecognizeModel.Language);
         }
 
-        protected  override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
+           // var dt = DateTime.Now.TimeOfDay.TotalMilliseconds;
+            var language = await CharacterRecognizeModel.InitLanguage();
+           // System.Diagnostics.Debug.WriteLine((DateTime.Now.TimeOfDay.TotalMilliseconds - dt).ToString());
+         
+            ocrEngine = new OcrEngine(language);
+            Debug.WriteLine(language.ToString());
         //    Frame frame = Window.Current.Content as Frame;
             SuspensionManager.RegisterFrame(ScenarioFrame, "scenarioFrame");
             if (ScenarioFrame.Content == null)
@@ -76,6 +86,7 @@ namespace LanguageDetectApp
                     throw new Exception("Failed to create scenario list");
                 }
             }
+            
 
         }
 
@@ -102,6 +113,7 @@ namespace LanguageDetectApp
             if (args.Files.Any() == true)
 	        {
                 imageModel.Image = await Util.LoadImage(args.Files.First());
+                imageModel.File = args.Files.First();
 	        }
         }
 
@@ -146,7 +158,9 @@ namespace LanguageDetectApp
 
                             CharacterRecognizeModel.PairWords.Add(
                                 new KeyValuePair<string, Rect>(word.Text, bound));
+#if DEBUG
                             Debug.WriteLine(word.Text);
+#endif
 
                             // WriteableBitmap.DrawRectangle là phương thức mở rộng từ lớp WriteableBitmapExtension. của thư viện WriteableEx
                             imageModel.Image.DrawRectangle(
@@ -164,7 +178,7 @@ namespace LanguageDetectApp
                 Debug.WriteLine(msg);
             }
 
-            Frame.Navigate(typeof(TextContent));
+            Frame.Navigate(typeof(TextContent), imageModel);
 
         }
 
