@@ -60,6 +60,8 @@ namespace LanguageDetectApp.Model
         /// <returns></returns>
         public static async Task<string> Translate(string text, string lang)
         {
+            int flagstatus = 0;
+            string msg = string.Empty;
             try
             {
                 string yandexAPIKey = "trnsl.1.1.20160106T143429Z.e255279ccf4f6c1f.2d1e4c6ed478b5dae506c464a2dd1be9a37b904c";
@@ -92,25 +94,37 @@ namespace LanguageDetectApp.Model
                     stream.Dispose();
                     response.Dispose();
 
+
                     return result;
                 }
             }
             catch (WebException ex)
             {
-                MessageDialog dialog = new MessageDialog("Please check your network.\n" +  ex.Message, "Something wrong.");
-                await dialog.ShowAsync();
-
-                return string.Empty;
+                flagstatus = 1;
+                msg = ex.Message;
             }
             catch (Exception ex)
             {
-                MessageDialog dialog = new MessageDialog(ex.Message, "Error");
+                flagstatus = 2;
+                msg = ex.Message;
+
+            }
+
+            if (flagstatus ==1)
+            {
+                MessageDialog dialog = new MessageDialog("Please check your network.\n" + msg, "Something wrong.");
                 await dialog.ShowAsync();
 
-
-
-                return string.Empty;
+                //return string.Empty;
             }
+            else if (flagstatus == 2)
+            {
+                MessageDialog dialog = new MessageDialog(msg, "Error");
+                await dialog.ShowAsync();
+
+                //return string.Empty;
+            }
+            return string.Empty;
         }
         /// <summary>
         /// Lấy toạ độ địa lý
