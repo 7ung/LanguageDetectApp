@@ -34,6 +34,7 @@ namespace LanguageDetectApp.Views
     public sealed partial class TextContent : Page
     {
         TextContentViewModel _textContentVM;
+        LanguageTranslateModel _translateModel;
 
         public TextContent()
         {
@@ -42,10 +43,19 @@ namespace LanguageDetectApp.Views
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             _textContentVM = Resources["textContentSource"] as TextContentViewModel;
+            _translateModel = Resources["languageCollection"] as LanguageTranslateModel;
             initShareUI();
+
+            var recognizeModel = e.Parameter as ImageRecognizeViewModel;
+            if(recognizeModel != null)
+            {
+                previewImage.Source = recognizeModel.Image;
+            }
+
+            fromLanguage.SelectedItem = "English";
+            toLanguage.SelectedItem = "Vietnamese";
         }
-
-
+        
         #region Share Data
         private void initShareUI()
         {
@@ -181,15 +191,31 @@ namespace LanguageDetectApp.Views
         private async void translateBtn_Click(object sender, RoutedEventArgs e)
         {
             translatePanel.Visibility = Visibility.Visible;
+            textContent.Visibility = Visibility.Collapsed;
+
+            Debug.WriteLine(_translateModel.LanguageTranslate);
+            _textContentVM.TranslateLanguage = _translateModel.LanguageTranslate;
 
             await _textContentVM.TranslateContent();
+            
         }
 
         private void closeTranslateBtn_Click(object sender, RoutedEventArgs e)
         {
             translatePanel.Visibility = Visibility.Collapsed;
+            textContent.Visibility = Visibility.Visible;
+
             translateContent.Text = string.Empty;
             translateBtn.Focus(FocusState.Programmatic);
+        }
+
+        private void saveToFileBtn_Click(object sender, RoutedEventArgs e)
+        {
+            FileModel model = new FileModel();
+            model.Content = _textContentVM.Content;
+            model.Name = "Enter new name...";
+
+            Frame.Navigate(typeof(FileIndexPage), model);
         }
     }
  

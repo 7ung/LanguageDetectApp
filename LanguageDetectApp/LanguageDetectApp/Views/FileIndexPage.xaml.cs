@@ -1,4 +1,5 @@
-﻿using LanguageDetectApp.ViewModels;
+﻿using LanguageDetectApp.Model;
+using LanguageDetectApp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,6 +25,7 @@ namespace LanguageDetectApp.Views
     public sealed partial class FileIndexPage : Page
     {
         private FileViewModel _fileViewModel;
+        private FileModel _saveFile;
 
         public FileIndexPage()
         {
@@ -38,9 +40,43 @@ namespace LanguageDetectApp.Views
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             _fileViewModel = Resources["filesSource"] as FileViewModel;
+            _saveFile = Resources["saveFileSource"] as FileModel;
 
             await _fileViewModel.GetStorageFolder();
             await _fileViewModel.GetFiles();
+
+            var savefile = e.Parameter as FileModel;
+            if (savefile != null)
+            {
+                _saveFile.Name = savefile.Name;
+                _saveFile.Content = savefile.Content;
+            }
+            else
+            {
+                savePanel.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private async void saveBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (savePanel.Visibility == Visibility.Visible)
+            {
+                await _fileViewModel.SaveFile(_saveFile);
+                savePanel.Visibility = Visibility.Collapsed;
+            }
+            
+        }
+
+        private void homeBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(MainPage));
+        }
+
+        private void cancelBtn_Click(object sender, RoutedEventArgs e)
+        {
+            savePanel.Visibility = Visibility.Collapsed;
+            saveBtn.IsEnabled = false;
+            cancelBtn.IsEnabled = false;
         }
     }
 }

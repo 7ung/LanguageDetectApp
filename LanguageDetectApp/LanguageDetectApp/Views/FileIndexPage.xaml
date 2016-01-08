@@ -6,11 +6,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:LanguageDetectApp.ViewModels"
+    xmlns:m="using:LanguageDetectApp.Model"
     mc:Ignorable="d" RequestedTheme="Light" Foreground="White">
 
     <Page.Resources>
         <vm:FileViewModel x:Key="filesSource"></vm:FileViewModel>
-
+        <m:FileModel x:Key="saveFileSource"></m:FileModel>
         <DataTemplate x:Key="fileItemTemplate">
             <StackPanel Orientation="Horizontal">
                 <Image x:Name="image" 
@@ -29,24 +30,46 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="60"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Files" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="32" Foreground="White"></TextBlock>
-        <TextBlock Text="{Binding SaveFolder.Path, Mode=OneWay, Source={StaticResource filesSource}}" VerticalAlignment="Center" Margin="10,0" FontSize="20" HorizontalAlignment="Right" Foreground="#7FFFFFFF"></TextBlock>
+        <TextBlock Grid.Row="0" Text="Files" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="32" Foreground="White"></TextBlock>
+        <TextBlock Grid.Row="0" Text="{Binding SavedFolder.Path, Mode=OneWay, Source={StaticResource filesSource}}" VerticalAlignment="Center" Margin="10,0" FontSize="20" HorizontalAlignment="Right" Foreground="#7FFFFFFF"></TextBlock>
 
+        <StackPanel Grid.Row="1" Name="savePanel" >
+            <TextBox x:Name="nameText"
+                Margin="0" TextWrapping="Wrap" 
+                Text="{Binding Name, Mode=TwoWay, Source={StaticResource saveFileSource}}" 
+                VerticalAlignment="Stretch" 
+                BorderThickness="0" 
+                Background="White" 
+                Width="400" FontSize="26.667" Height="40"/>
+            
+            <TextBox x:Name="contentText" 
+                     Margin="0" TextWrapping="Wrap" 
+                     Text="{Binding Content, Mode=TwoWay, Source={StaticResource saveFileSource}}" 
+                     VerticalAlignment="Stretch"
+                     BorderThickness="0" Height="160"/>
+
+        </StackPanel>
+        
         <ListView 
             Name="listFiles"
             ItemTemplate="{Binding Source={StaticResource fileItemTemplate}}" 
             ItemsSource="{Binding Source={StaticResource filesSource}}"
-            Grid.Row="1" Foreground="White"
+            Grid.Row="2" Foreground="White"
             />
+        
     </Grid>
 
     <Page.BottomAppBar>
         <CommandBar Background="White" Foreground="{StaticResource TurquoiseFlatButton}">
             <CommandBar.PrimaryCommands>
-                <AppBarButton x:Name="backBtn" Label="Back" Icon="Back" />
+                
+                <AppBarButton x:Name="homeBtn" Label="Home" Icon="RepeatAll" Click="homeBtn_Click" />
+                <AppBarButton x:Name="saveBtn" Label="Save" Icon="Save" Click="saveBtn_Click" />
+                <AppBarButton x:Name="cancelBtn" Label="Cancel" Icon="Cancel" Click="cancelBtn_Click" />
             </CommandBar.PrimaryCommands>
         </CommandBar>
     </Page.BottomAppBar>

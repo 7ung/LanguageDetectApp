@@ -6,59 +6,92 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:LanguageDetectApp.ViewModels"
-    mc:Ignorable="d" Background="#FF1ABC9C">
-    
+    xmlns:m="using:LanguageDetectApp.Model"
+    mc:Ignorable="d" Foreground="White" RequestedTheme="Light">
+
     <!--<Page.Resources>
         <m:CharacterRecognizeModel x:Key="CharacterRecognize"></m:CharacterRecognizeModel>
     </Page.Resources>-->
-    
+
     <Page.Resources>
         <vm:TextContentConverter x:Key="textconverter"></vm:TextContentConverter>
         <vm:TextContentViewModel x:Key="textContentSource"/>
         <vm:VisibilityConverter x:Key="visibilityConverter" />
+        <m:LanguageTranslateModel x:Key="languageCollection"></m:LanguageTranslateModel>
+
+        <DataTemplate x:Key="languageItemTemplate">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding}" FontSize="23" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Left" TextWrapping="WrapWholeWords"/>
+            </StackPanel>
+        </DataTemplate>
     </Page.Resources>
-    
+    <Page.Background>
+        <StaticResource ResourceKey="TurquoiseFlatButton"/>
+    </Page.Background>
+
     <Grid >
         <Grid.RowDefinitions>
+            <RowDefinition Height="250"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
+        
+        <Border Background="#CCFFFFFF">
+        <Image x:Name="previewImage" 
+               Grid.Row="0" Width="400" Height="250"/>
+        </Border>
 
         <TextBox Name="textContent" 
-                 Grid.Row="0"  
+                 Grid.Row="1"  
                  Text="{Binding Path=Content, Mode=TwoWay, Source={StaticResource textContentSource}}" 
                  TextWrapping="Wrap" 
                  VerticalAlignment="Stretch"
-                 Margin="10,20,10,10" Header="Content" Background="#FFECF0F1" BorderThickness="0" />
+                 Margin="10,10,10,10" Background="#FFECF0F1" BorderThickness="0" />
 
-        <Grid Name="translatePanel" Grid.Row="1" Height="Auto" Margin="10,0,10,10" Visibility="Collapsed">
+        <Grid Name="translatePanel" Grid.Row="1" Height="Auto" Margin="0" Visibility="Collapsed">
             <ProgressBar x:Name="translateProgress" Height="5" VerticalAlignment="Top" Foreground="White" Background="{x:Null}" Style="{StaticResource ProgressBarStyle}" IsIndeterminate="{Binding IsTranslating, Source={StaticResource textContentSource}}" />
 
+            <ComboBox Name="fromLanguage"
+                ItemsSource="{Binding Source={StaticResource languageCollection}}"
+                VerticalAlignment="Top" HorizontalAlignment="Left"
+                Width="150" Margin="10,0,0,0" Foreground="White" 
+                BorderBrush="White" 
+                BorderThickness="0"
+                FontSize="13" 
+                SelectedItem="{Binding From, Mode=TwoWay, Source={StaticResource languageCollection}}"/>
+            <TextBlock Text="to" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="-40,15,0,0" />
+            <ComboBox Name="toLanguage"
+                ItemsSource="{Binding Source={StaticResource languageCollection}}" 
+                VerticalAlignment="Top" HorizontalAlignment="Right" 
+                Width="150" Margin="0,0,55,0" 
+                Foreground="White" 
+                BorderBrush="White" 
+                BorderThickness="0" FontSize="13" 
+                SelectedItem="{Binding To, Mode=TwoWay, Source={StaticResource languageCollection}}" />  
+
             <TextBox Name="translateContent" 
-                     Grid.Row="1"  
-                     Text="{Binding TranslatedContent, Mode=TwoWay, Source={StaticResource textContentSource}}" 
-                     Margin="0,25,0,0" TextWrapping="Wrap" 
-                     VerticalAlignment="Stretch"
-                     Height="250" Header="Translate"
-                     />
+                Grid.Row="1"  
+                Text="{Binding TranslatedContent, Mode=TwoWay, Source={StaticResource textContentSource}}" 
+                Margin="10,50,10,10" TextWrapping="Wrap" 
+                VerticalAlignment="Stretch" 
+                Background="White" BorderThickness="0" />
             <Button x:Name="closeTranslateBtn" Content="x" Grid.Row="1" 
                     VerticalAlignment="Top" HorizontalAlignment="Right"
                     BorderThickness="0" 
-                    FontSize="26" Click="closeTranslateBtn_Click" Style="{StaticResource FlatStyle}" Height="50" MinHeight="0" MinWidth="0" Width="60" />
+                    FontSize="26" Click="closeTranslateBtn_Click" Style="{StaticResource FlatStyle}" Height="50" MinHeight="0" MinWidth="0" Width="60" BorderBrush="White" Foreground="White" />
 
-    </Grid>
+        </Grid>
     </Grid>
     <Page.BottomAppBar>
-        <CommandBar>
+        <CommandBar Background="White" Foreground="{StaticResource TurquoiseFlatButton}" FontSize="9.333">
             <CommandBar.PrimaryCommands>
                 <AppBarButton x:Name="translateBtn" Label="Translate" Icon="Character" Click="translateBtn_Click"/>
-                <AppBarButton x:Name="saveBtn" Label="Save" Icon="Save"/>
-                <AppBarButton Label="Share" Icon="OtherUser"/>
+                <AppBarButton x:Name="saveToFileBtn" Label="Save" Icon="Save" Click="saveToFileBtn_Click"/>
+                <AppBarButton Label="Share" Icon="OtherUser" Click="ShareFacebookClick"/>
             </CommandBar.PrimaryCommands>
             <CommandBar.SecondaryCommands>
-                <AppBarButton Label="Share" Click="ShareFacebookClick"/>
-                <AppBarButton Label="addContact" Click="addContactClick"/>
-
+                <AppBarButton Label="Add Contact" Click="addContactClick"/>
+                <AppBarButton Label="Save Translated Content" />
+                <AppBarButton Label="Setting" />
             </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.BottomAppBar>

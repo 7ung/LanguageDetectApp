@@ -103,9 +103,9 @@ namespace LanguageDetectApp
             base.OnNavigatedFrom(e);
 
             _imageViewModel.CurrentState = eState.Scale;
-            createCropRect.Content = "Crop";
-            
-            if(_cropDrawnRect != null && drawCanvas.Children.Contains(_cropDrawnRect))
+            createCropRect.Opacity = 1.0;
+
+            if (_cropDrawnRect != null && drawCanvas.Children.Contains(_cropDrawnRect))
                 drawCanvas.Children.Remove(_cropDrawnRect);
         }
 
@@ -147,7 +147,7 @@ namespace LanguageDetectApp
             // đọc hình
             await _imageViewModel.RecognizeImage();
             
-            Frame.Navigate(typeof(TextContent));
+            Frame.Navigate(typeof(TextContent), _imageViewModel);
         }
         
         private void CropImage()
@@ -207,7 +207,7 @@ namespace LanguageDetectApp
             if (_imageViewModel.CurrentState == eState.Scale)
             {
                 _imageViewModel.CurrentState = eState.Crop;
-                createCropRect.Content = "Cancel";
+                createCropRect.Opacity = 0.5;
 
                 _cropRect = new Rect();
                 _cropDrawnRect = new Rectangle()
@@ -222,7 +222,7 @@ namespace LanguageDetectApp
             else
             {
                 _imageViewModel.CurrentState = eState.Scale;
-                createCropRect.Content = "Crop";
+                createCropRect.Opacity = 1.0;
 
                 drawCanvas.Children.Remove(_cropDrawnRect);
             }
