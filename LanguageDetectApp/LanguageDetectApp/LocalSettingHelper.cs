@@ -10,6 +10,7 @@ namespace LanguageDetectApp
     {
         public static readonly string AllowGPSKey = "AllowGPS";
         public static readonly string RecogLanguageKey = "RecognizeLanguage";
+        public static readonly string LanguageTranslateTo = "TranslateTo";
 
         public static bool IsExistsLocalSettingKey(string key)
         {
