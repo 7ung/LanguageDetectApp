@@ -44,7 +44,8 @@ namespace LanguageDetectApp.Model
                 {
                     LanguageTranslate = Util.SupportedLanguages[From] + "-" + Util.SupportedLanguages[value];
                 }
-                
+                if (value != String.Empty)
+                    LocalSettingHelper.SetLocalSettingKeyValue(LocalSettingHelper.LanguageTranslateTo, value);
                 OnPropertyChanged(new PropertyChangedEventArgs("To"));
             }
         }
@@ -87,6 +88,10 @@ namespace LanguageDetectApp.Model
                 // Ngôn ngữ được sử dụng để phân tích hình ảnh
                 var ocrlanguage = (OcrLanguage)LocalSettingHelper.GetLocalSettingValue(LocalSettingHelper.RecogLanguageKey);
 
+                if (ocrlanguage == OcrLanguage.English)
+                {
+                    return "English";
+                }
                 // Lấy ra các key của các countries ví dụ es, jp
                 var keycode = Util.AvailableCountries.Where(country => country.Value == ocrlanguage).Select(c => c.Key).First();
 
@@ -127,6 +132,7 @@ namespace LanguageDetectApp.Model
                 {
                     langreturn = "English";
                 }
+                
             }
             else
             {
