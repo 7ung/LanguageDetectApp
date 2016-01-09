@@ -30,6 +30,7 @@ namespace LanguageDetectApp.Views
 
         ContactModel _contactModel;
 
+        #region Constuctor & OnNavigatedTo
         public AddContact()
         {
             this.InitializeComponent();
@@ -44,7 +45,9 @@ namespace LanguageDetectApp.Views
             _contactModel.PageCollapsed = true;
  
         }
+        #endregion
 
+        #region ImagePicker
         private void AddImageClick(object sender, RoutedEventArgs e)
         {
             FileOpenPicker fileopenpicker = new FileOpenPicker();
@@ -72,7 +75,9 @@ namespace LanguageDetectApp.Views
                 thumbnail.Source = await Util.LoadImage(args.Files.First());
             }
         }
+        #endregion
 
+        #region Event Handle
         private async void SaveClick(object sender, RoutedEventArgs e)
         {
             bool success = false;
@@ -104,5 +109,6 @@ namespace LanguageDetectApp.Views
         {
             _contactModel.PageCollapsed = !_contactModel.PageCollapsed;
         }
+        #endregion
     }
 }

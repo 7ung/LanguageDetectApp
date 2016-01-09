@@ -84,28 +84,29 @@ namespace LanguageDetectApp.Model
 
         public static async Task<OcrLanguage> InitLanguage()
         {
-            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            if (localSettings.Values.ContainsKey("AllowsGPS") == false)
-            {
-                MessageDialog msgbox = new MessageDialog("Mày có cho tao xài GPS không");
-                msgbox.Commands.Add(new UICommand("No") { Id = 0 });
-                msgbox.Commands.Add(new UICommand("Yes") { Id = 1 });
+            // Chắc là cái này nên gọi trong app.launch
+            //var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            //if (localSettings.Values.ContainsKey("AllowsGPS") == false)
+            //{
+            //    MessageDialog msgbox = new MessageDialog("Mày có cho tao xài GPS không");
+            //    msgbox.Commands.Add(new UICommand("No") { Id = 0 });
+            //    msgbox.Commands.Add(new UICommand("Yes") { Id = 1 });
 
-                var result = await msgbox.ShowAsync() as UICommand;
-                int id = Convert.ToInt32(result.Id);
-                switch (id)
-                {
-                    case 1: case 0:
-                        localSettings.Values["AllowsGPS"] = id;
-                        break;
-                    default:
-                        localSettings.Values["AllowsGPS"] = 0;
-                        break;
-                }
-            }
+            //    var result = await msgbox.ShowAsync() as UICommand;
+            //    int id = Convert.ToInt32(result.Id);
+            //    switch (id)
+            //    {
+            //        case 1: case 0:
+            //            localSettings.Values["AllowsGPS"] = id;
+            //            break;
+            //        default:
+            //            localSettings.Values["AllowsGPS"] = 0;
+            //            break;
+            //    }
+            //}
 
-            if (Convert.ToInt32(localSettings.Values["AllowsGPS"]) == 0)
-                return OcrLanguage.English;
+            //if (Convert.ToInt32(localSettings.Values["AllowsGPS"]) == 0)
+            //    return OcrLanguage.English;
             // Lấy toạ độ địa lý theo vĩ độ kinh độ
             Point coordinates = await Util.GetGeo2Coordinates();
 

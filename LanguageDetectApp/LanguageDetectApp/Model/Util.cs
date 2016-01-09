@@ -29,6 +29,10 @@ namespace LanguageDetectApp.Model
         public static Point JapanPosition = new Point(35.8887233, 137.188617);
         public static Point ChinaPosition = new Point(34.8649535, 90.6391346);
         #endregion
+        public Util()
+        {
+
+        }
         public static string GGApiCheckCoord = "http://maps.googleapis.com/maps/api/geocode/json?latlng=latitude,longitude";
 
         public static string YandexTranslateQuery = "https://translate.yandex.net/api/v1.5/tr.json/translate?key={0}&text={1}&lang={2}";
@@ -43,6 +47,8 @@ namespace LanguageDetectApp.Model
             {"KR",OcrLanguage.Korean},
             {"ES",OcrLanguage.Spanish},
             {"FR",OcrLanguage.French},
+            {"GB",OcrLanguage.English},
+
         };
 
         public static async Task<WriteableBitmap> LoadImage(StorageFile file)
@@ -54,7 +60,8 @@ namespace LanguageDetectApp.Model
                 WriteableBitmap writeablebitmap = new WriteableBitmap((int)imgProp.Width, (int)imgProp.Height);
                 writeablebitmap.SetSource(imgStream);
                 return writeablebitmap;
-            } 
+            }
+
         }
         
         /// <summary>
@@ -152,6 +159,7 @@ namespace LanguageDetectApp.Model
                 return new Point(0.0, 0.0);
             }
         }
+
     }
 
 }

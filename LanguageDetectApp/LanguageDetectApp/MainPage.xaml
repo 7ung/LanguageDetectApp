@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:LanguageDetectApp.ViewModels"
+    xmlns:m="using:LanguageDetectApp.Model"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -14,6 +15,7 @@
 
         <vm:StateToEnableConverter x:Key="stateToEnableConverter" />
         <vm:StateToVisibleConverter x:Key="stateToVisibleConverter" />
+
     </Page.Resources>
 
     <Grid>
@@ -51,7 +53,23 @@
             </Rectangle>
         </Canvas>
 
-
+        <Button x:Name="settingbtn" Content="{Binding Language,Source={StaticResource imageDataContext}}"
+                HorizontalAlignment="Right" VerticalAlignment="Top" 
+                Background="#FF1DD2AF"  Height="60" Style="{StaticResource FlatStyle}" 
+                Margin="0,10,10,0" BorderThickness="0" MinWidth="50" FontSize="26.667"
+                Click="SettingClick">
+            <Button.Flyout>
+                <ListPickerFlyout x:Name="listpickerflyout" ItemsPicked="ListPickerFlyOutPicker">
+                    <ListPickerFlyout.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding }" HorizontalAlignment="Left" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListPickerFlyout.ItemTemplate>
+                </ListPickerFlyout> 
+            </Button.Flyout>
+        </Button>
         <Button x:Name="browsebtn" Content="..." HorizontalAlignment="Left" Click="BrowseButton_Click" Margin="10,0,0,10" VerticalAlignment="Bottom" BorderThickness="0" Width="50" MinWidth="50" FontSize="26.667" Background="#FF1DD2AF" Height="60" Style="{StaticResource FlatStyle}" IsEnabled="{Binding CurrentState, Converter={StaticResource stateToEnableConverter}, ConverterParameter=ScaleElement, Source={StaticResource imageDataContext}}" />
         <Button x:Name="wtndection" Content="Recognize" HorizontalAlignment="Right" Click="WhatTheNumberButton_Click" VerticalAlignment="Bottom" Margin="0,0,10,10" BorderThickness="0" Background="#FF1DD2AF" Height="60" Width="140" Style="{StaticResource FlatStyle}"/>
         <Button x:Name="createCropRect" 

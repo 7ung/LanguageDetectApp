@@ -75,7 +75,13 @@ namespace LanguageDetectApp
             Current = this;
 
             // gán static resouce bên mainpage.xaml để xài
-            _imageViewModel = Resources["imageDataContext"] as ImageRecognizeViewModel; 
+            _imageViewModel = Resources["imageDataContext"] as ImageRecognizeViewModel;
+            listpickerflyout.ItemsSource = Util.AvailableCountries.Values;
+            //int language = Convert.ToInt32(LocalSettingHelper.GetLocalSettingValue(LocalSettingHelper.RecogLanguageKey));
+            //settingbtn.Content = Enum.Parse (typeof(OcrLanguage),LocalSettingHelper.GetLocalSettingValue(LocalSettingHelper.RecogLanguageKey).ToString());
+            _imageViewModel.Language = (OcrLanguage) Enum.Parse(
+                typeof(OcrLanguage),
+                LocalSettingHelper.GetLocalSettingValue(LocalSettingHelper.RecogLanguageKey).ToString());
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -284,6 +290,23 @@ namespace LanguageDetectApp
         private void drawCanvas_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
         {
 
+        }
+
+        private void SettingClick(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void ListPickerFlyOutPicker(ListPickerFlyout sender, ItemsPickedEventArgs args)
+        {
+            var items = args.AddedItems;
+            if (items.Any() == false)
+	        	 return;
+            LocalSettingHelper.SetLocalSettingKeyValue(LocalSettingHelper.RecogLanguageKey, (int)items.First());
+            //settingbtn.Content = items.First().ToString();
+            _imageViewModel.Language =(OcrLanguage)Enum.Parse(
+                 typeof(OcrLanguage),
+                 items.First().ToString());
         }
 
     }
