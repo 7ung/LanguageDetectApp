@@ -77,7 +77,6 @@ namespace LanguageDetectApp.Views
         {
             DataRequest datarequest = args.Request;
             datarequest.Data.Properties.Title = "Share from 7ung app";
-            datarequest.Data.Properties.Description = "description";
             await Window.Current.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
                 () =>
                 {

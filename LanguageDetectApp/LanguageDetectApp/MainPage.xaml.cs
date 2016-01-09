@@ -47,9 +47,9 @@ namespace LanguageDetectApp
         public static MainPage Current;
 
         public const string FEATURE_NAME = "Demo Detach Image";
-        
+                    
         private ImageRecognizeViewModel _imageViewModel;
-        
+
         // rect để tính
         Rect _cropRect;
         // rect để vẽ
@@ -61,20 +61,26 @@ namespace LanguageDetectApp
         List<Scenario> scenarios = new List<Scenario>
         {
         };
-        
+
         public List<Scenario> Scenarios
         {
             get { return this.scenarios; }
         }
-        
+
         public MainPage()
         {
             this.InitializeComponent();
             this.NavigationCacheMode = NavigationCacheMode.Required;
             Current = this;
-            
+
             // gán static resouce bên mainpage.xaml để xài
             _imageViewModel = Resources["imageDataContext"] as ImageRecognizeViewModel; 
+            listpickerflyout.ItemsSource = Util.AvailableCountries.Values;
+            //int language = Convert.ToInt32(LocalSettingHelper.GetLocalSettingValue(LocalSettingHelper.RecogLanguageKey));
+            //settingbtn.Content = Enum.Parse (typeof(OcrLanguage),LocalSettingHelper.GetLocalSettingValue(LocalSettingHelper.RecogLanguageKey).ToString());
+            _imageViewModel.Language = (OcrLanguage) Enum.Parse(
+                typeof(OcrLanguage),
+                LocalSettingHelper.GetLocalSettingValue(LocalSettingHelper.RecogLanguageKey).ToString());
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -104,7 +110,7 @@ namespace LanguageDetectApp
 
             _imageViewModel.CurrentState = eState.Scale;
             createCropRect.Opacity = 1.0;
-
+            
             if (_cropDrawnRect != null && drawCanvas.Children.Contains(_cropDrawnRect))
                 drawCanvas.Children.Remove(_cropDrawnRect);
         }
@@ -136,7 +142,7 @@ namespace LanguageDetectApp
                 
                 // set lại scale nhỏ nhất
                 CaculateMinScale(true);
-            }
+	        }
         }
 
         private async void WhatTheNumberButton_Click(object sender, RoutedEventArgs e)
@@ -151,7 +157,7 @@ namespace LanguageDetectApp
         }
         
         private void CropImage()
-        {
+            {
             var cropRect = new Rect();
 
             if (_imageViewModel.CurrentState == eState.Crop && _cropRect != null)
@@ -207,7 +213,7 @@ namespace LanguageDetectApp
         /// </summary>
         /// <param name="setScale">Có set scale lại không</param>
         private void CaculateMinScale(bool setScale = false)
-        {
+            {
             double ratio;
 
             if(_imageViewModel.Image.PixelWidth >= _imageViewModel.Image.PixelHeight)
@@ -226,19 +232,19 @@ namespace LanguageDetectApp
         }
         
         private void createCropRect_Click(object sender, RoutedEventArgs e)
-        {
+                    {
             if (_imageViewModel.CurrentState == eState.Scale)
-            {
+                        {
                 _imageViewModel.CurrentState = eState.Crop;
                 createCropRect.Opacity = 0.5;
 
                 _cropRect = new Rect();
                 _cropDrawnRect = new Rectangle()
-                {
+                            {
                     Fill = new SolidColorBrush(Windows.UI.Color.FromArgb(100, 255, 255, 255)),
                     Width = _cropRect.Width,
                     Height = _cropRect.Height
-                };
+                            };
 
                 drawCanvas.Children.Add(_cropDrawnRect);
             }
@@ -249,8 +255,8 @@ namespace LanguageDetectApp
 
                 drawCanvas.Children.Remove(_cropDrawnRect);
             }
-        }
-        
+            }
+
         private void drawCanvas_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
         {
             _startPoint = e.Position;
@@ -265,7 +271,7 @@ namespace LanguageDetectApp
         private void drawCanvas_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
         {
             _endPoint = e.Position;
-            
+
             if (_startPoint.X > _endPoint.X && _startPoint.Y > _endPoint.Y)
             {
                 _cropRect.X = _endPoint.X;
@@ -304,9 +310,26 @@ namespace LanguageDetectApp
 
         private void drawCanvas_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
         {
+
+        }
+
+        private void SettingClick(object sender, RoutedEventArgs e)
+        {
             
         }
-        
+
+        private void ListPickerFlyOutPicker(ListPickerFlyout sender, ItemsPickedEventArgs args)
+        {
+            var items = args.AddedItems;
+            if (items.Any() == false)
+	        	 return;
+            LocalSettingHelper.SetLocalSettingKeyValue(LocalSettingHelper.RecogLanguageKey, (int)items.First());
+            //settingbtn.Content = items.First().ToString();
+            _imageViewModel.Language =(OcrLanguage)Enum.Parse(
+                 typeof(OcrLanguage),
+                 items.First().ToString());
+        }
+
     }
 
 }

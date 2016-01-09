@@ -43,6 +43,8 @@ namespace LanguageDetectApp.Model
             {"KR",OcrLanguage.Korean},
             {"ES",OcrLanguage.Spanish},
             {"FR",OcrLanguage.French},
+            {"GB",OcrLanguage.English},
+
         };
 
         public static async Task<WriteableBitmap> LoadImage(StorageFile file)
@@ -54,9 +56,10 @@ namespace LanguageDetectApp.Model
                 WriteableBitmap writeablebitmap = new WriteableBitmap((int)imgProp.Width, (int)imgProp.Height);
                 writeablebitmap.SetSource(imgStream);
                 return writeablebitmap;
-            }
-        }
+            } 
 
+        }
+        
         /// <summary>
         /// Dịch chuỗi
         /// </summary>
@@ -92,7 +95,7 @@ namespace LanguageDetectApp.Model
                     {
                         result += item.ToString() + " ";
                     }
-
+                    
                     reader.Dispose();
                     stream.Dispose();
                     response.Dispose();

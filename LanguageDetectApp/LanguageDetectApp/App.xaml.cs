@@ -1,4 +1,5 @@
 ﻿using LanguageDetectApp.Common;
+using LanguageDetectApp.Model;
 using LanguageDetectApp.Views;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using WindowsPreview.Media.Ocr;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
 
@@ -78,6 +80,8 @@ namespace LanguageDetectApp
         /// <param name="e">Details about the launch request and process.</param>
         protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
+            await initRecognizeLanguage();
+
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
             {
@@ -132,8 +136,34 @@ namespace LanguageDetectApp
 
             await initContactStore();
 
+
             // Ensure the current window is active
             Window.Current.Activate();
+        }
+
+        private async Task initRecognizeLanguage()
+        {
+            // Kiểm tra key có tồn tại hay không.
+            // Nếu có => return khôgn làm gì
+            // Nếu không => Hỏi có cho dùng GPS không
+            // ____________ Nếu khôgn cho thì lưu key với value là english
+            // ____________ Nếu cho thì gọi CharacterRecognizeModel.InitLanguage(); => lưu key
+
+            if (LocalSettingHelper.IsExistsLocalSettingKey(LocalSettingHelper.RecogLanguageKey) == false)
+            {
+                bool isAllowGPS = await AskForUseGPS();
+                OcrLanguage language = OcrLanguage.English;
+                if (isAllowGPS == true)
+                {
+                    language = await CharacterRecognizeModel.InitLanguage();
+                }
+                else
+                {
+                    language = OcrLanguage.English;
+                }
+                LocalSettingHelper.SetLocalSettingKeyValue(LocalSettingHelper.RecogLanguageKey, (int)language);
+            }
+
         }
 
         private async Task initContactStore()
@@ -147,11 +177,12 @@ namespace LanguageDetectApp
             await RemoteIdHelper.SetRemoteIdGuid(App.ContactStore);
         }
 
-        private async Task CheckAllowGPS()
+        private async Task<bool> AskForUseGPS()
         {
-            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            if (localSettings.Values.ContainsKey("AllowsGPS")== false)
+            bool isAllowed = false;
+            if (LocalSettingHelper.IsExistsLocalSettingKey(LocalSettingHelper.AllowGPSKey) == false)
             {
+                // Nếu khôgn có key setting
                 MessageDialog msgbox = new MessageDialog("Mày có cho tao xài GPS không");
                 msgbox.Commands.Add(new UICommand("No") { Id = 0 });
                 msgbox.Commands.Add(new UICommand("Yes") { Id = 1 });
@@ -161,26 +192,26 @@ namespace LanguageDetectApp
                switch (id)
                {
                    case 1:
-                       localSettings.Values["AllowsGPS"] = true;
+                       isAllowed = true;
+                      // localSettings.Values["AllowsGPS"] = true;
                        break;
                    default:
-                       localSettings.Values["AllowsGPS"] = false;
+                       isAllowed = false;
+                      // localSettings.Values["AllowsGPS"] = false;
                        break;
                }
+               //localSettings.Values["AllowsGPS"] = isAllowed;
+               LocalSettingHelper.SetLocalSettingKeyValue(LocalSettingHelper.AllowGPSKey, isAllowed);
             }
+            else
+            {
+                //isAllowed = Convert.ToBoolean(localSettings.Values["AllowsGPS"]);
+                isAllowed = Convert.ToBoolean(LocalSettingHelper.GetLocalSettingValue(LocalSettingHelper.AllowGPSKey));
+            }
+            return isAllowed;
         }
 
-        /// <summary>
-        /// Restores the content transitions after the app has launched.
-        /// </summary>
-        /// <param name="sender">The object where the handler is attached.</param>
-        /// <param name="e">Details about the navigation event.</param>
-        private void RootFrame_FirstNavigated(object sender, NavigationEventArgs e)
-        {
-            var rootFrame = sender as Frame;
-            rootFrame.ContentTransitions = this.transitions ?? new TransitionCollection() { new NavigationThemeTransition() };
-            rootFrame.Navigated -= this.RootFrame_FirstNavigated;
-        }
+
         
         protected async override void OnActivated(IActivatedEventArgs e)
         {
@@ -209,6 +240,19 @@ namespace LanguageDetectApp
 
             Window.Current.Activate();
 
+        }
+
+        #region Stuff
+        /// <summary>
+        /// Restores the content transitions after the app has launched.
+        /// </summary>
+        /// <param name="sender">The object where the handler is attached.</param>
+        /// <param name="e">Details about the navigation event.</param>
+        private void RootFrame_FirstNavigated(object sender, NavigationEventArgs e)
+        {
+            var rootFrame = sender as Frame;
+            rootFrame.ContentTransitions = this.transitions ?? new TransitionCollection() { new NavigationThemeTransition() };
+            rootFrame.Navigated -= this.RootFrame_FirstNavigated;
         }
         private async Task RestoreStatusAsync(ApplicationExecutionState previousExecutionState)
         {
@@ -262,5 +306,6 @@ namespace LanguageDetectApp
             // TODO: Save application state and stop any background activity
             deferral.Complete();
         }
+        #endregion
     }
 }

@@ -18,7 +18,10 @@ namespace LanguageDetectApp.ViewModels
         #region Constructor
         public ImageRecognizeViewModel()
         {
-            _ocrEngine = new OcrEngine(OcrLanguage.English);
+            OcrLanguage language =(OcrLanguage) Enum.Parse(
+                typeof(OcrLanguage), 
+                (LocalSettingHelper.GetLocalSettingValue(LocalSettingHelper.RecogLanguageKey)).ToString());
+            _ocrEngine = new OcrEngine(language);
             _imageModel = new ImageModel();
         }
 
