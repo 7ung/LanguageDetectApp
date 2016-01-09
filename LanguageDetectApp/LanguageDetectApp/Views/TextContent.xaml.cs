@@ -198,6 +198,7 @@ namespace LanguageDetectApp.Views
 
         private async void translateBtn_Click(object sender, RoutedEventArgs e)
         {
+            saveTranslated.IsEnabled = true;
             translatePanel.Visibility = Visibility.Visible;
             textContent.Visibility = Visibility.Collapsed;
 

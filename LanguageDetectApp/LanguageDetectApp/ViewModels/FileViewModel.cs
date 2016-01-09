@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -26,7 +27,7 @@ namespace LanguageDetectApp.ViewModels
             set
             {
                 _storageFolder = value;
-                OnPropertyChanged(new PropertyChangedEventArgs("SaveFolder"));
+                OnPropertyChanged(new PropertyChangedEventArgs("SavedFolder"));
             }
         }
 
@@ -40,13 +41,28 @@ namespace LanguageDetectApp.ViewModels
 
         public async Task GetFiles()
         {
-            var files = await SavedFolder.GetFilesAsync();
-            if(files.Any())
+            try
             {
-                foreach (var item in files)
+
+                var files = await SavedFolder.GetFilesAsync();
+                if (files.Any())
                 {
-                    this.Add(new FileModel(item.Name));
+                    foreach (var item in files)
+                    {
+                        var buffer = await FileIO.ReadBufferAsync(item);
+                        Encoding encoding = Encoding.UTF8;
+
+                        var data = buffer.ToArray();
+
+                        var content = encoding.GetString(data, 0, data.Length);
+
+                        this.Add(new FileModel(item.Name, content));
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
             }
         }
 

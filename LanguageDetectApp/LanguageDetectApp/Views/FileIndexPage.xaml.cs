@@ -78,5 +78,23 @@ namespace LanguageDetectApp.Views
             saveBtn.IsEnabled = false;
             cancelBtn.IsEnabled = false;
         }
+
+        private void StackPanel_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var panel = sender as StackPanel;
+            if (panel != null)
+            {
+                var model = panel.DataContext as FileModel;
+                if (model != null)
+                {
+                    _saveFile.Name = model.Name;
+                    _saveFile.Content = model.Content;
+
+                    savePanel.Visibility = Visibility.Visible;
+                    saveBtn.IsEnabled = true;
+                    saveBtn.IsEnabled = true;
+                }
+            }
+        }
     }
 }

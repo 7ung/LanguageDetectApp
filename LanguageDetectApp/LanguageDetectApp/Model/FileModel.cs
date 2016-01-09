@@ -17,6 +17,12 @@ namespace LanguageDetectApp.Model
             Name = name;
         }
 
+        public FileModel(string name, string content)
+        {
+            Name = name;
+            Content = content;
+        }
+
         private string _content;
         private string _path;
         private string _name;

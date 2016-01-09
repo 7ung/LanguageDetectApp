@@ -10,15 +10,16 @@
     mc:Ignorable="d" RequestedTheme="Light" Foreground="White">
 
     <Page.Resources>
-        <vm:FileViewModel x:Key="filesSource"></vm:FileViewModel>
-        <m:FileModel x:Key="saveFileSource"></m:FileModel>
+        <vm:VisibilityConverter x:Key="VisibilityConverter"/>
+        <vm:FileViewModel x:Key="filesSource"/>
+        <m:FileModel x:Key="saveFileSource"/>
         <DataTemplate x:Key="fileItemTemplate">
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" Tapped="StackPanel_Tapped">
                 <Image x:Name="image" 
                        Height="50" Width="50" 
-                       Source="ms-appx:///Assets/Logo.png"
+                       Source="ms-appx:///Assets/document.png"
                        Margin="10"/>
-                <TextBlock Text="{Binding Path=Name}" FontSize="23" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Left" TextWrapping="WrapWholeWords"/>
+                <TextBlock Text="{Binding Name}" FontSize="23" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Left" TextWrapping="WrapWholeWords"/>
             </StackPanel>
         </DataTemplate>
     </Page.Resources>

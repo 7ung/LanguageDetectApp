@@ -58,8 +58,16 @@ namespace LanguageDetectApp.ViewModels
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            //throw new NotImplementedException();
-            return false;
+            var visible = (Visibility)value;
+            
+            if(visible == Visibility.Collapsed)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
     }
 }
