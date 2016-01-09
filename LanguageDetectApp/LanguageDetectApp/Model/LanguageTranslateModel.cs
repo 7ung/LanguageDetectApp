@@ -6,6 +6,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Foundation;
+using WindowsPreview.Media.Ocr;
 
 namespace LanguageDetectApp.Model
 {
@@ -19,8 +21,10 @@ namespace LanguageDetectApp.Model
             }
 
             // default
-            From = "English";
-            To = "Vietnamese";
+            //From = "English";
+            //To = "Vietnamese";
+            //From = getRecognizeLanguage();
+            //To = getLocalityLanguage();
         }
 
         private string _languageTranslate = string.Empty;
@@ -74,5 +78,80 @@ namespace LanguageDetectApp.Model
             }
         }
 
+        #region Init Language for Translate
+        public static string GetRecognizeLanguage()
+        {
+            string languagert = "English";
+            if (LocalSettingHelper.IsExistsLocalSettingKey(LocalSettingHelper.RecogLanguageKey))
+            {
+                // Ngôn ngữ được sử dụng để phân tích hình ảnh
+                var ocrlanguage = (OcrLanguage)LocalSettingHelper.GetLocalSettingValue(LocalSettingHelper.RecogLanguageKey);
+
+                // Lấy ra các key của các countries ví dụ es, jp
+                var keycode = Util.AvailableCountries.Where(country => country.Value == ocrlanguage).Select(c => c.Key).First();
+
+                var temp = Util.CountryLanguagePair.Where(country => country.Value == keycode);
+                
+                if (temp.Any())
+                {
+                    var list = temp.Select(lang => lang.Key);
+                    foreach (var item in list)
+                    {
+                        if (Util.SupportedLanguages.Values.Contains(item))
+                        {
+                            languagert = Util.SupportedLanguages.Where(lang => lang.Value == item).Select(l => l.Key).First();
+                            break;
+                        }
+                    }
+                }
+
+            }
+            return languagert;
+        }
+
+        public static async Task<string> GetLocalityLanguage()
+        {
+            string langreturn = String.Empty;
+            if (LocalSettingHelper.IsExistsLocalSettingKey(LocalSettingHelper.LanguageTranslateTo) == false)
+            {
+                bool isAllowGPS = false;
+
+                isAllowGPS = Convert.ToBoolean(LocalSettingHelper.GetLocalSettingValue(LocalSettingHelper.AllowGPSKey));
+                if (isAllowGPS == true)
+                {
+                    Point coordinates = await Util.GetGeo2Coordinates();
+                    string local = await Util.GetLocalCountryCode(coordinates);
+                    langreturn = getLanguageFromCountryCode(local);
+                }
+                else
+                {
+                    langreturn = "English";
+                }
+            }
+            else
+            {
+                langreturn = Convert.ToString( LocalSettingHelper.GetLocalSettingValue(LocalSettingHelper.LanguageTranslateTo));
+            }
+            return langreturn;
+        }
+
+        private static string getLanguageFromCountryCode(string local)
+        {
+            var temp = Util.CountryLanguagePair.Where(country => country.Value == local);
+
+            if (temp.Any())
+            {
+                var list = temp.Select(lang => lang.Key);
+                foreach (var item in list)
+                {
+                    if (Util.SupportedLanguages.Values.Contains(item))
+                    {
+                        return Util.SupportedLanguages.Where(lang => lang.Value == item).Select(l => l.Key).First();
+                    }
+                }
+            }
+            return "English";
+        }
+        #endregion
     }
 }

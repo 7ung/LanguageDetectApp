@@ -36,11 +36,12 @@ namespace LanguageDetectApp.Views
         TextContentViewModel _textContentVM;
         LanguageTranslateModel _translateModel;
 
+        #region Constuctor & OnNavigated
         public TextContent()
         {
             this.InitializeComponent();
         }
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             _textContentVM = Resources["textContentSource"] as TextContentViewModel;
             _translateModel = Resources["languageCollection"] as LanguageTranslateModel;
@@ -52,10 +53,19 @@ namespace LanguageDetectApp.Views
                 previewImage.Source = recognizeModel.Image;
             }
 
-            fromLanguage.SelectedItem = "English";
-            toLanguage.SelectedItem = "Vietnamese";
+            //fromLanguage.SelectedItem = "English";
+            _translateModel.From = LanguageTranslateModel.GetRecognizeLanguage();
+            _translateModel.To = await LanguageTranslateModel.GetLocalityLanguage();
+            fromLanguage.SelectedItem = _translateModel.From;
+            toLanguage.SelectedItem = _translateModel.To;
         }
-        
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            CharacterRecognizeModel.PairWords.Clear();
+        }
+        #endregion
+
         #region Share Data
         private void initShareUI()
         {
@@ -106,11 +116,7 @@ namespace LanguageDetectApp.Views
         }
         #endregion
 
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
-        {
-            CharacterRecognizeModel.PairWords.Clear();
-        }
-
+        #region Add Contact Helper
         private void addContactClick(object sender, RoutedEventArgs e)
         {
             Regex regex = new Regex("\\d+");
@@ -186,7 +192,9 @@ namespace LanguageDetectApp.Views
             }
             return String.Empty;
         }
+        #endregion
 
+        #region Translate
         private async void translateBtn_Click(object sender, RoutedEventArgs e)
         {
             translatePanel.Visibility = Visibility.Visible;
@@ -207,7 +215,7 @@ namespace LanguageDetectApp.Views
             translateContent.Text = string.Empty;
             translateBtn.Focus(FocusState.Programmatic);
         }
-
+        #endregion
         private void saveToFileBtn_Click(object sender, RoutedEventArgs e)
         {
             FileModel model = new FileModel();
