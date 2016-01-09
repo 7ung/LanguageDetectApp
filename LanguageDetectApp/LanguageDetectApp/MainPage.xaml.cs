@@ -60,7 +60,6 @@ namespace LanguageDetectApp
 
         List<Scenario> scenarios = new List<Scenario>
         {
-
         };
 
         public List<Scenario> Scenarios
@@ -75,7 +74,7 @@ namespace LanguageDetectApp
             Current = this;
 
             // gán static resouce bên mainpage.xaml để xài
-            _imageViewModel = Resources["imageDataContext"] as ImageRecognizeViewModel;
+            _imageViewModel = Resources["imageDataContext"] as ImageRecognizeViewModel; 
             listpickerflyout.ItemsSource = Util.AvailableCountries.Values;
             //int language = Convert.ToInt32(LocalSettingHelper.GetLocalSettingValue(LocalSettingHelper.RecogLanguageKey));
             //settingbtn.Content = Enum.Parse (typeof(OcrLanguage),LocalSettingHelper.GetLocalSettingValue(LocalSettingHelper.RecogLanguageKey).ToString());
@@ -103,8 +102,6 @@ namespace LanguageDetectApp
                     throw new Exception("Failed to create scenario list");
                 }
             }
-
-
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -112,9 +109,9 @@ namespace LanguageDetectApp
             base.OnNavigatedFrom(e);
 
             _imageViewModel.CurrentState = eState.Scale;
-            createCropRect.Content = "Crop";
+            createCropRect.Opacity = 1.0;
             
-            if(_cropDrawnRect != null && drawCanvas.Children.Contains(_cropDrawnRect))
+            if (_cropDrawnRect != null && drawCanvas.Children.Contains(_cropDrawnRect))
                 drawCanvas.Children.Remove(_cropDrawnRect);
         }
 
@@ -140,6 +137,7 @@ namespace LanguageDetectApp
         {
             if (args.Files.Any() == true)
 	        {
+                _imageViewModel.Path = args.Files.First().Path;
                 imageView.Source = await Util.LoadImage(args.Files.First());
                 
                 // set lại scale nhỏ nhất
@@ -155,7 +153,7 @@ namespace LanguageDetectApp
             // đọc hình
             await _imageViewModel.RecognizeImage();
             
-            Frame.Navigate(typeof(TextContent));
+            Frame.Navigate(typeof(TextContent), _imageViewModel);
         }
         
         private void CropImage()
@@ -215,7 +213,7 @@ namespace LanguageDetectApp
             if (_imageViewModel.CurrentState == eState.Scale)
                         {
                 _imageViewModel.CurrentState = eState.Crop;
-                createCropRect.Content = "Cancel";
+                createCropRect.Opacity = 0.5;
 
                 _cropRect = new Rect();
                 _cropDrawnRect = new Rectangle()
@@ -230,7 +228,7 @@ namespace LanguageDetectApp
             else
             {
                 _imageViewModel.CurrentState = eState.Scale;
-                createCropRect.Content = "Crop";
+                createCropRect.Opacity = 1.0;
 
                 drawCanvas.Children.Remove(_cropDrawnRect);
             }

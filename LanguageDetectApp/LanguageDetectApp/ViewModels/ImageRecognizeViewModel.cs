@@ -41,6 +41,16 @@ namespace LanguageDetectApp.ViewModels
         private eState _currentState = eState.Scale;
         #endregion
 
+        public string Path
+        {
+            get { return _imageModel.Path; }
+            set
+            {
+                _imageModel.Path = value;
+                onPropertyChanged("Path");
+            }
+        }
+
         #region Property
         public eState CurrentState
         {
@@ -57,9 +67,9 @@ namespace LanguageDetectApp.ViewModels
             set {
                 if (_imageModel.Image != value)
                 {
-                    _imageModel.Image = value;
-                    onPropertyChanged("Image");                   
-                }
+                _imageModel.Image = value;
+                onPropertyChanged("Image");
+            }
 
             }
         }
@@ -71,9 +81,9 @@ namespace LanguageDetectApp.ViewModels
             {
                 if (_ocrEngine.Language != value)
                 {
-                    _ocrEngine.Language = value;
-                    onPropertyChanged("Language");                   
-                }
+                _ocrEngine.Language = value;
+                onPropertyChanged("Language");
+            }
 
             }
         }

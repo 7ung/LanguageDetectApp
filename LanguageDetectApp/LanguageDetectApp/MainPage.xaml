@@ -21,7 +21,7 @@
     <Grid>
         <StackPanel>
             <Frame x:Name="ScenarioFrame" />
-            
+
             <ScrollViewer x:Name="scrollViewer"
                           ZoomMode="Enabled" 
                           MaxZoomFactor="2"
@@ -73,18 +73,21 @@
         <Button x:Name="browsebtn" Content="..." HorizontalAlignment="Left" Click="BrowseButton_Click" Margin="10,0,0,10" VerticalAlignment="Bottom" BorderThickness="0" Width="50" MinWidth="50" FontSize="26.667" Background="#FF1DD2AF" Height="60" Style="{StaticResource FlatStyle}" IsEnabled="{Binding CurrentState, Converter={StaticResource stateToEnableConverter}, ConverterParameter=ScaleElement, Source={StaticResource imageDataContext}}" />
         <Button x:Name="wtndection" Content="Recognize" HorizontalAlignment="Right" Click="WhatTheNumberButton_Click" VerticalAlignment="Bottom" Margin="0,0,10,10" BorderThickness="0" Background="#FF1DD2AF" Height="60" Width="140" Style="{StaticResource FlatStyle}"/>
         <Button x:Name="createCropRect" 
-                Content="Crop" 
+                Content="" 
                 HorizontalAlignment="Left" 
                 Click="createCropRect_Click" 
                 VerticalAlignment="Top" 
                 Margin="10,10,0,0" 
                 BorderThickness="0" 
-                Background="#FF1DD2AF" 
                 Height="50" 
-                Width="100" 
-                Style="{StaticResource FlatStyle}" MinWidth="0" MinHeight="0"/>
+                Width="50" 
+                MinWidth="0" MinHeight="0" Style="{StaticResource FlatStyle}">
+            <Button.Background>
+                <ImageBrush Stretch="Uniform" ImageSource="Assets/crop.png"/>
+            </Button.Background>
+        </Button>
 
-       
+
     </Grid>
-    
+
 </Page>

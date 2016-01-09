@@ -44,6 +44,18 @@ namespace LanguageDetectApp.Model
         }
         #endregion
 
+        private string _path;
+
+        public string Path
+        {
+            get { return _path; }
+            set
+            {
+                _path = value;
+                OnPropertyChanged("Path");
+            }
+        }
+        
         #region Event
         public event PropertyChangedEventHandler PropertyChanged;
 

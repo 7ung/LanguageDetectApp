@@ -20,9 +20,19 @@
         <m3:DefaultTile Wide310x150Logo="Assets\WideLogo.png" Square71x71Logo="Assets\Square71x71Logo.png">
         </m3:DefaultTile>
         <m3:SplashScreen Image="Assets\SplashScreen.png" />
+        <m3:InitialRotationPreference>
+          <m3:Rotation Preference="portrait" />
+        </m3:InitialRotationPreference>
       </m3:VisualElements>
       <Extensions>
-        <Extension Category="windows.protocol">
+        <Extension Category="windows.fileTypeAssociation">
+          <FileTypeAssociation Name="text">
+            <SupportedFileTypes>
+              <FileType>.txt</FileType>
+            </SupportedFileTypes>
+          </FileTypeAssociation>
+        </Extension>
+		    <Extension Category="windows.protocol">
           <Protocol Name="msft-89eb781b22c94fe9b9eb2df2240cfd5f" />
         </Extension>
       </Extensions>
@@ -32,6 +42,7 @@
     <Capability Name="internetClientServer" />
     <Capability Name="picturesLibrary" />
     <Capability Name="sharedUserCertificates" />
+    <Capability Name="removableStorage" />
     <m3:Capability Name="contacts" />
     <DeviceCapability Name="location" />
   </Capabilities>
