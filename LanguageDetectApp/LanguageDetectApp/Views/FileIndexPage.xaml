@@ -67,7 +67,7 @@
         <CommandBar Background="White" Foreground="{StaticResource TurquoiseFlatButton}">
             <CommandBar.PrimaryCommands>
                 
-                <AppBarButton x:Name="homeBtn" Label="Home" Icon="RepeatAll" Click="homeBtn_Click" />
+                <AppBarButton x:Name="homeBtn" Label="Home" Icon="ViewAll" Click="homeBtn_Click" />
                 <AppBarButton x:Name="saveBtn" Label="Save" Icon="Save" Click="saveBtn_Click" />
                 <AppBarButton x:Name="cancelBtn" Label="Cancel" Icon="Cancel" Click="cancelBtn_Click" />
             </CommandBar.PrimaryCommands>

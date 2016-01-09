@@ -23,6 +23,7 @@ using System.Text;
 using System.Runtime.Serialization.Json;
 using Newtonsoft.Json.Linq;
 using LanguageDetectApp.ViewModels;
+using Windows.UI.Popups;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
 
@@ -89,6 +90,14 @@ namespace LanguageDetectApp.Views
 
         private async void ShareFacebookClick(object sender, RoutedEventArgs e)
         {
+            if (textContent.Text == string.Empty)
+            {
+                MessageDialog dialog = new MessageDialog("Nothing to share.", "Ops");
+                await dialog.ShowAsync();
+                return;
+            }
+                
+
             try
             {
                 await Window.Current.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
@@ -213,6 +222,15 @@ namespace LanguageDetectApp.Views
         {
             FileModel model = new FileModel();
             model.Content = _textContentVM.Content;
+            model.Name = "Enter new name...";
+
+            Frame.Navigate(typeof(FileIndexPage), model);
+        }
+
+        private void saveTranslated_Click(object sender, RoutedEventArgs e)
+        {
+            FileModel model = new FileModel();
+            model.Content = _textContentVM.TranslatedContent;
             model.Name = "Enter new name...";
 
             Frame.Navigate(typeof(FileIndexPage), model);
