@@ -162,8 +162,31 @@ namespace LanguageDetectApp
 
             if (_imageViewModel.CurrentState == eState.Crop && _cropRect != null)
             {
-                cropRect.X = (scrollViewer.HorizontalOffset + _cropRect.X) / scrollViewer.ZoomFactor;
-                cropRect.Y = (scrollViewer.VerticalOffset + _cropRect.Y) / scrollViewer.ZoomFactor;
+                // vị trí của tấm hình trong scrollviewer
+                var pos = imageView.TransformToVisual(scrollViewer).TransformPoint(new Point(0, 0));
+                double width, height;
+
+                // kt xem nó ở trong hay lớn ra ngoài
+                if(pos.X > 0)
+                {
+                    width = (_cropRect.X - pos.X);
+                }
+                else
+                {
+                    width = (scrollViewer.HorizontalOffset + _cropRect.X);
+                }
+
+                if(pos.Y > 0)
+                {
+                    height = _cropRect.Y - pos.Y;
+                }
+                else
+                {
+                    height = (scrollViewer.VerticalOffset + _cropRect.Y);
+                }
+
+                cropRect.X = width / scrollViewer.ZoomFactor;
+                cropRect.Y = height / scrollViewer.ZoomFactor;
                 cropRect.Width = _cropRect.Width / scrollViewer.ZoomFactor;
                 cropRect.Height = _cropRect.Height / scrollViewer.ZoomFactor;
 
@@ -193,7 +216,7 @@ namespace LanguageDetectApp
             {
             double ratio;
 
-            if(_imageViewModel.Image.PixelWidth > _imageViewModel.Image.PixelHeight)
+            if(_imageViewModel.Image.PixelWidth >= _imageViewModel.Image.PixelHeight)
             {
                 ratio = scrollViewer.ActualWidth / _imageViewModel.Image.PixelWidth;
             }

@@ -7,104 +7,102 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:LanguageDetectApp.ViewModels"
     xmlns:sys="using:System"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    mc:Ignorable="d" RequestedTheme="Light">
     <Page.Resources>
         <vm:PageCollapsedConverter x:Key="pagecollapsed"></vm:PageCollapsedConverter>
         <!--<sys:String x:Key="string"></sys:String>-->
         <!--<sys:DateTime x:Key="datetime"></sys:DateTime>-->
     </Page.Resources>
+    <Page.Background>
+        <StaticResource ResourceKey="TurquoiseFlatButton"/>
+    </Page.Background>
     <Grid>
         <ScrollViewer HorizontalScrollMode="Disabled" >
-            <StackPanel Name="fullstackpanel" >
+            <StackPanel Name="fullstackpanel" Margin="10,0,10,20" >
                 <Frame x:Name="ScenarioFrame" />
-                <StackPanel Orientation="Horizontal">
-                    <Image Name="thumbnail" Stretch="Fill"
-                       Width="160" Height="160" HorizontalAlignment="Left" 
+                <Grid Margin="0,0,20,0">
+                    <Image Name="thumbnail"
+                       Width="120" Height="120" HorizontalAlignment="Left" Source="ms-appx:///Assets/user.png" Margin="10,0,0,0" 
                            />
-                    <Button Name="btnAddImg" VerticalAlignment="Bottom" Click="AddImageClick" >
-                        <Image Width="50" Height="50"
-                               Source="ms-appx:///Assets/612952.jpg" Stretch="Fill">
-                            
-                        </Image>
+                    <Button Name="btnAddImg" VerticalAlignment="Bottom" Click="AddImageClick" Style="{StaticResource ImageButtonStyle}" BorderThickness="0" Width="{Binding ActualWidth, ElementName=thumbnail}" Height="{Binding ActualHeight, ElementName=thumbnail}" MinWidth="0" MinHeight="0" Background="{x:Null}" />
+
+                    <Button HorizontalAlignment="Right" Name="CollapseBtn"
+                        Click="CollapseBtnClick" Style="{StaticResource FlatStyle}" BorderThickness="0" Width="50" MinWidth="0" MinHeight="0" Height="50" Foreground="{x:Null}">
+                        <Button.Background>
+                            <ImageBrush Stretch="Uniform" ImageSource="ms-appx:///Assets/add.png"/>
+                        </Button.Background>
                     </Button>
-                </StackPanel>
-                <Button HorizontalAlignment="Stretch" Name="CollapseBtn"
-                        Click="CollapseBtnClick">
-                    <Image Height="30" Source="ms-appx:///Assets/11205981_827335904025618_783659537277089402_n.jpg" Stretch="Fill"
-                           
-                           />
-                </Button>
+                </Grid>
                 <!--<TextBlock Name="txtblockName" Text="Name"/>-->
                 <TextBox Name="txtboxName" Header="Name"
-                         Text="{Binding GivenName, Mode=TwoWay, TargetNullValue=''}"/>
-              
+                         Text="{Binding GivenName, Mode=TwoWay, TargetNullValue=''}" Background="White" BorderThickness="0"/>
+
                 <!--<TextBlock Name="txtblockFamilyName" Text="Family Name"/>-->
                 <TextBox Name="txtboxFamilyName" Header="Family Name" 
                          Text="{Binding FamilyName, Mode=TwoWay, TargetNullValue=''}"  
-                         Visibility="{Binding PageCollapsed, Converter={StaticResource pagecollapsed}}" Margin="30,0,0,0" />
-                
+                         Visibility="{Binding PageCollapsed, Converter={StaticResource pagecollapsed}}" Margin="30,0,0,0" BorderThickness="0" Background="White" />
+
                 <!--<TextBlock Name="txtblockNickName" Text="Nick Name"/>-->
                 <TextBox Name="txtboxNickName" Header="Nick Name"
                          Text="{Binding Nickname,Mode=TwoWay, TargetNullValue=''}" 
-                         Visibility="{Binding PageCollapsed, Converter={StaticResource pagecollapsed}}" Margin="30,0,0,0"  />
-                
+                         Visibility="{Binding PageCollapsed, Converter={StaticResource pagecollapsed}}" Margin="30,0,0,0" BorderThickness="0" Background="White"  />
+
                 <!--<TextBlock Name="txtblockMobile" Text="Mobile"/>-->
                 <TextBox Name="txtBlockMobile" Header="Mobile"
                          Text="{Binding Mobilephone,Mode=TwoWay, TargetNullValue=''}" 
-                         InputScope="Number"/>
+                         InputScope="Number" BorderThickness="0" Background="White"/>
 
                 <!--<TextBlock Name="txtblockAltMobile" Text="Alternate Mobile"/>-->
                 <TextBox Name="txtBlockAltMobile" Header="Alternate Mobile"
                          Text="{Binding AlternateMobilePhone,Mode=TwoWay, TargetNullValue=''}"  
                          InputScope="Number"  
-                         Visibility="{Binding PageCollapsed, Converter={StaticResource pagecollapsed}}" Margin="30,0,0,0" />
+                         Visibility="{Binding PageCollapsed, Converter={StaticResource pagecollapsed}}" Margin="30,0,0,0" BorderThickness="0" Background="White" />
 
                 <!--<TextBlock Name="txtblockPhone" Text="Home Phone"/>-->
                 <TextBox Name="txtboxPhone" Header="Home Phone"
                          Text="{Binding Telephone,Mode=TwoWay, TargetNullValue=''}" 
                          InputScope="Number"  
-                         Visibility="{Binding PageCollapsed, Converter={StaticResource pagecollapsed}}" Margin="30,0,0,0" />
+                         Visibility="{Binding PageCollapsed, Converter={StaticResource pagecollapsed}}" Margin="30,0,0,0" BorderThickness="0" Background="White" />
 
                 <TextBox Name="txtBlockEmail" Header="Email"
                          Text="{Binding Email,Mode=TwoWay, TargetNullValue=''}" 
-                         InputScope="EmailSmtpAddress"/>
+                         InputScope="EmailSmtpAddress" BorderThickness="0" Background="White"/>
 
                 <!--<TextBlock Name="txtblockBirthDay" Text="Birthday"/>-->
                 <DatePicker Name="dtPickerBirthDay" 
                             Header="Birthday"
-                            Date="{Binding Birthday, Mode=TwoWay}" d:IsHidden="True" />
-                
+                            Date="{Binding Birthday, Mode=TwoWay}" d:IsHidden="True" Foreground="White" />
+
                 <!--<TextBlock Name="txtblockAddress" Text="Address"/>-->
                 <TextBox Name="txtboxAddress"
                          Header="Address"
-                         Text="{Binding Address,Mode=TwoWay, TargetNullValue=''}" 
+                         Text="{Binding Address,Mode=TwoWay, TargetNullValue=''}" BorderThickness="0" Background="White" 
                          />
 
                 <!--<TextBlock Name="txtblockStreet" Text="Street"/>-->
                 <TextBox Name="txtboxStreet" 
                          Header="Street"
                          Text="{Binding Street,Mode=TwoWay, TargetNullValue=''}" 
-                         Visibility="{Binding PageCollapsed, Converter={StaticResource pagecollapsed}}" Margin="30,0,0,0"  />
+                         Visibility="{Binding PageCollapsed, Converter={StaticResource pagecollapsed}}" Margin="30,0,0,0" BorderThickness="0" Background="White"  />
 
                 <!--<TextBlock Name="txtblockRegion" Text="Region/State"/>-->
                 <TextBox Name="txtboxRegion" Header="Region/State"
                          Text="{Binding Region,Mode=TwoWay, TargetNullValue=''}" 
-                         Visibility="{Binding PageCollapsed, Converter={StaticResource pagecollapsed}}" Margin="30,0,0,0"  />
+                         Visibility="{Binding PageCollapsed, Converter={StaticResource pagecollapsed}}" Margin="30,0,0,0" BorderThickness="0" Background="White"  />
                 <!--<TextBlock Name="txtblockCountry" Text="Country"/>-->
                 <TextBox Name="txtboxCountry" Header="Country"
                          Text="{Binding Country,Mode=TwoWay, TargetNullValue=''}" 
-                         Visibility="{Binding PageCollapsed, Converter={StaticResource pagecollapsed}}" Margin="30,0,0,0"  />
+                         Visibility="{Binding PageCollapsed, Converter={StaticResource pagecollapsed}}" Margin="30,0,0,0" BorderThickness="0" Background="White"  />
 
             </StackPanel>
         </ScrollViewer>
     </Grid>
 
     <Page.BottomAppBar>
-        <CommandBar>
+        <CommandBar Background="White" Foreground="{StaticResource TurquoiseFlatButton}">
             <CommandBar.PrimaryCommands>
                 <AppBarButton Label="Save" Icon="Save" Click="SaveClick"/>
-                <AppBarButton Label="Share" Icon="OtherUser"/>
+                <AppBarButton Label="Share" Icon="Sync"/>
             </CommandBar.PrimaryCommands>
         </CommandBar>
     </Page.BottomAppBar>

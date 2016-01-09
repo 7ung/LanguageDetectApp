@@ -9,10 +9,6 @@
     xmlns:m="using:LanguageDetectApp.Model"
     mc:Ignorable="d" Foreground="White" RequestedTheme="Light">
 
-    <!--<Page.Resources>
-        <m:CharacterRecognizeModel x:Key="CharacterRecognize"></m:CharacterRecognizeModel>
-    </Page.Resources>-->
-
     <Page.Resources>
         <vm:TextContentConverter x:Key="textconverter"></vm:TextContentConverter>
         <vm:TextContentViewModel x:Key="textContentSource"/>
@@ -49,25 +45,25 @@
 
         <Grid Name="translatePanel" Grid.Row="1" Height="Auto" Margin="0" Visibility="Collapsed">
             <ProgressBar x:Name="translateProgress" Height="5" VerticalAlignment="Top" Foreground="White" Background="{x:Null}" Style="{StaticResource ProgressBarStyle}" IsIndeterminate="{Binding IsTranslating, Source={StaticResource textContentSource}}" />
-
-            <ComboBox Name="fromLanguage"
-                ItemsSource="{Binding Source={StaticResource languageCollection}}"
-                VerticalAlignment="Top" HorizontalAlignment="Left"
-                Width="150" Margin="10,0,0,0" Foreground="White" 
-                BorderBrush="White" 
-                BorderThickness="0"
-                FontSize="13" 
-                SelectedItem="{Binding From, Mode=TwoWay, Source={StaticResource languageCollection}}"/>
-            <TextBlock Text="to" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="-40,15,0,0" />
-            <ComboBox Name="toLanguage"
-                ItemsSource="{Binding Source={StaticResource languageCollection}}" 
-                VerticalAlignment="Top" HorizontalAlignment="Right" 
-                Width="150" Margin="0,0,55,0" 
-                Foreground="White" 
-                BorderBrush="White" 
-                BorderThickness="0" FontSize="13" 
-                SelectedItem="{Binding To, Mode=TwoWay, Source={StaticResource languageCollection}}" />  
-
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <ComboBox Name="fromLanguage"
+                    ItemsSource="{Binding Source={StaticResource languageCollection}}"
+                    VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" Foreground="White" 
+                    BorderBrush="White" 
+                    BorderThickness="0"
+                    FontSize="13" 
+                    SelectedItem="{Binding From, Mode=TwoWay, Source={StaticResource languageCollection}}" MinWidth="100" 
+                    />
+                <TextBlock Text="to" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+            
+                <ComboBox Name="toLanguage"
+                    ItemsSource="{Binding Source={StaticResource languageCollection}}" 
+                    VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" 
+                    Foreground="White" 
+                    BorderBrush="White" 
+                    BorderThickness="0" FontSize="13" 
+                    SelectedItem="{Binding To, Mode=TwoWay, Source={StaticResource languageCollection}}" MinWidth="100" />
+            </StackPanel>
             <TextBox Name="translateContent" 
                 Grid.Row="1"  
                 Text="{Binding TranslatedContent, Mode=TwoWay, Source={StaticResource textContentSource}}" 
@@ -78,7 +74,7 @@
                     VerticalAlignment="Top" HorizontalAlignment="Right"
                     BorderThickness="0" 
                     FontSize="26" Click="closeTranslateBtn_Click" Style="{StaticResource FlatStyle}" Height="50" MinHeight="0" MinWidth="0" Width="60" BorderBrush="White" Foreground="White" />
-
+            
         </Grid>
     </Grid>
     <Page.BottomAppBar>
@@ -86,11 +82,11 @@
             <CommandBar.PrimaryCommands>
                 <AppBarButton x:Name="translateBtn" Label="Translate" Icon="Character" Click="translateBtn_Click"/>
                 <AppBarButton x:Name="saveToFileBtn" Label="Save" Icon="Save" Click="saveToFileBtn_Click"/>
-                <AppBarButton Label="Share" Icon="OtherUser" Click="ShareFacebookClick"/>
+                <AppBarButton Label="Share" Icon="Sync" Click="ShareFacebookClick"/>
             </CommandBar.PrimaryCommands>
             <CommandBar.SecondaryCommands>
-                <AppBarButton Label="Add Contact" Click="addContactClick"/>
-                <AppBarButton Label="Save Translated Content" />
+                <AppBarButton Label="Save Contact" Click="addContactClick"/>
+                <AppBarButton x:Name="saveTranslated" Label="Save Translated Content" Click="saveTranslated_Click" />
                 <AppBarButton Label="Setting" />
             </CommandBar.SecondaryCommands>
         </CommandBar>
