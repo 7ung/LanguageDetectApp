@@ -183,7 +183,7 @@ namespace LanguageDetectApp
             if (LocalSettingHelper.IsExistsLocalSettingKey(LocalSettingHelper.AllowGPSKey) == false)
             {
                 // Nếu khôgn có key setting
-                MessageDialog msgbox = new MessageDialog("Mày có cho tao xài GPS không");
+                MessageDialog msgbox = new MessageDialog("Do you want to use GPS?");
                 msgbox.Commands.Add(new UICommand("No") { Id = 0 });
                 msgbox.Commands.Add(new UICommand("Yes") { Id = 1 });
 

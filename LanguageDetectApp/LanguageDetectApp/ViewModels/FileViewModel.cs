@@ -73,7 +73,10 @@ namespace LanguageDetectApp.ViewModels
                 var file = await SavedFolder.CreateFileAsync(model.Name + ".txt");
                 await FileIO.WriteTextAsync(file, model.Content);
 
-                this.Add(model);
+                if(!this.Contains(model))
+                {
+                    this.Add(model);
+                }
             }
             catch (Exception ex)
             {

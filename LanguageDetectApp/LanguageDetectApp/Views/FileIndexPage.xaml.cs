@@ -92,7 +92,7 @@ namespace LanguageDetectApp.Views
 
                     savePanel.Visibility = Visibility.Visible;
                     saveBtn.IsEnabled = true;
-                    saveBtn.IsEnabled = true;
+                    cancelBtn.IsEnabled = true;
                 }
             }
         }
