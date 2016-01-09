@@ -55,9 +55,9 @@
 
         <Button x:Name="settingbtn" Content="{Binding Language,Source={StaticResource imageDataContext}}"
                 HorizontalAlignment="Right" VerticalAlignment="Top" 
-                Background="#FF1DD2AF"  Height="60" Style="{StaticResource FlatStyle}" 
-                Margin="0,10,10,0" BorderThickness="0" MinWidth="50" FontSize="26.667"
-                Click="SettingClick">
+                Background="#FF1DD2AF"  Height="45" Style="{StaticResource FlatStyle}" 
+                Margin="0,10,10,0" BorderThickness="0" MinWidth="100" FontSize="21.333"
+                Click="SettingClick" MinHeight="0">
             <Button.Flyout>
                 <ListPickerFlyout x:Name="listpickerflyout" ItemsPicked="ListPickerFlyOutPicker">
                     <ListPickerFlyout.ItemTemplate>
