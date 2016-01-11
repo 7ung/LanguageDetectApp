@@ -48,6 +48,10 @@ namespace LanguageDetectApp.Views
         public void End()
         {
             cropRect.Visibility = Visibility.Collapsed;
+
+            //hide
+            cropPoint1.Visibility = Visibility.Collapsed;
+            cropPoint2.Visibility = Visibility.Collapsed;
         }
         
         private void drawCanvas_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
@@ -55,8 +59,6 @@ namespace LanguageDetectApp.Views
             //hide
             cropPoint1.Visibility = Visibility.Collapsed;
             cropPoint2.Visibility = Visibility.Collapsed;
-            cropPoint3.Visibility = Visibility.Collapsed;
-            cropPoint4.Visibility = Visibility.Collapsed;
 
             _startPoint = e.Position;
 
@@ -72,34 +74,7 @@ namespace LanguageDetectApp.Views
         {
             _endPoint = e.Position;
 
-            if (_startPoint.X > _endPoint.X && _startPoint.Y > _endPoint.Y)
-            {
-                _cropRect.X = _endPoint.X;
-                _cropRect.Width = _startPoint.X - _endPoint.X;
-                _cropRect.Y = _endPoint.Y;
-                _cropRect.Height = _startPoint.Y - _endPoint.Y;
-            }
-            else if (_startPoint.X < _endPoint.X && _startPoint.Y < _endPoint.Y)
-            {
-                _cropRect.X = _startPoint.X;
-                _cropRect.Width = _endPoint.X - _startPoint.X;
-                _cropRect.Y = _startPoint.Y;
-                _cropRect.Height = _endPoint.Y - _startPoint.Y;
-            }
-            else if (_startPoint.X > _endPoint.X && _startPoint.Y < _endPoint.Y)
-            {
-                _cropRect.X = _endPoint.X;
-                _cropRect.Width = _startPoint.X - _endPoint.X;
-                _cropRect.Y = _startPoint.Y;
-                _cropRect.Height = _endPoint.Y - _startPoint.Y;
-            }
-            else if (_startPoint.X < _endPoint.X && _startPoint.Y > _endPoint.Y)
-            {
-                _cropRect.X = _startPoint.X;
-                _cropRect.Width = _endPoint.X - _startPoint.X;
-                _cropRect.Y = _endPoint.Y;
-                _cropRect.Height = _startPoint.Y - _endPoint.Y;
-            }
+            UpdateRectangle();
             
             cropRect.Width = _cropRect.Width;
             cropRect.Height = _cropRect.Height;
@@ -112,12 +87,8 @@ namespace LanguageDetectApp.Views
         {
             cropPoint1.Visibility = Visibility.Visible;
             cropPoint2.Visibility = Visibility.Visible;
-
-            Canvas.SetLeft(cropPoint1, _cropRect.Left - cropPoint1.Width / 2);
-            Canvas.SetTop(cropPoint1, _cropRect.Top - cropPoint1.Height / 2);
-
-            Canvas.SetLeft(cropPoint2, _cropRect.Left + _cropRect.Width - cropPoint1.Width / 2);
-            Canvas.SetTop(cropPoint2, _cropRect.Top + _cropRect.Height - cropPoint1.Height / 2);
+            
+            UpdateCropPoint();
         }
         
         private void cropPoint_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
@@ -128,22 +99,27 @@ namespace LanguageDetectApp.Views
 
             if (point.Name == "cropPoint1")
             {
-                Canvas.SetLeft(cropPoint1, Canvas.GetLeft(cropPoint1) + e.Delta.Translation.X);
-                Canvas.SetTop(cropPoint1, Canvas.GetTop(cropPoint1) + e.Delta.Translation.Y);
-
                 _startPoint.X += e.Delta.Translation.X;
                 _startPoint.Y += e.Delta.Translation.Y;
             }
             else if (point.Name == "cropPoint2")
             {
-                Canvas.SetLeft(cropPoint2, Canvas.GetLeft(cropPoint2) + e.Delta.Translation.X);
-                Canvas.SetTop(cropPoint2, Canvas.GetTop(cropPoint2) + e.Delta.Translation.Y);
-
                 _endPoint.X += e.Delta.Translation.X;
                 _endPoint.Y += e.Delta.Translation.Y;
             }
 
+            // cập nhật hcn để vẽ
             UpdateRectangle();
+            
+            // cập nhật lại start/end point
+            _startPoint.X = _cropRect.X;
+            _startPoint.Y = _cropRect.Y;
+
+            _endPoint.X = _startPoint.X + _cropRect.Width;
+            _endPoint.Y = _startPoint.Y + _cropRect.Height;
+
+            // cập nhật nút kéo
+            UpdateCropPoint();
             
             cropRect.Width = _cropRect.Width;
             cropRect.Height = _cropRect.Height;
@@ -194,8 +170,8 @@ namespace LanguageDetectApp.Views
             Canvas.SetLeft(cropPoint1, _cropRect.Left - cropPoint1.Width / 2);
             Canvas.SetTop(cropPoint1, _cropRect.Top - cropPoint1.Height / 2);
 
-            Canvas.SetLeft(cropPoint2, _cropRect.Left + _cropRect.Width - cropPoint1.Width / 2);
-            Canvas.SetTop(cropPoint2, _cropRect.Top + _cropRect.Height - cropPoint1.Height / 2);
+            Canvas.SetLeft(cropPoint2, _cropRect.Left + _cropRect.Width - cropPoint2.Width / 2);
+            Canvas.SetTop(cropPoint2, _cropRect.Top + _cropRect.Height - cropPoint2.Height / 2);
         }
 
         private void cropRect_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
