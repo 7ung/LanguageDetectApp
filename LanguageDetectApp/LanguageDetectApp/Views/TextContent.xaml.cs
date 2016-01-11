@@ -24,6 +24,7 @@ using System.Runtime.Serialization.Json;
 using Newtonsoft.Json.Linq;
 using LanguageDetectApp.ViewModels;
 using Windows.UI.Popups;
+using LanguageDetachApp.Common;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
 
@@ -36,22 +37,50 @@ namespace LanguageDetectApp.Views
     {
         TextContentViewModel _textContentVM;
         LanguageTranslateModel _translateModel;
+        NavigationHelper _navigationhelper;
+
 
         #region Constuctor & OnNavigated
         public TextContent()
         {
             this.InitializeComponent();
+
+            _navigationhelper = new NavigationHelper(this);
+            _navigationhelper.LoadState += Navigationhelper_LoadState;
+            _navigationhelper.SaveState += Navigationhelper_SaveState;
+
+            initShareUI();
+
+        }
+
+        private void Navigationhelper_SaveState(object sender, SaveStateEventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
+
+        private void Navigationhelper_LoadState(object sender, LoadStateEventArgs e)
+        {
+            //throw new NotImplementedException();
         }
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
+            this._navigationhelper.OnNavigatedTo(e);
             _textContentVM = Resources["textContentSource"] as TextContentViewModel;
+            _textContentVM.GetContent();
             _translateModel = Resources["languageCollection"] as LanguageTranslateModel;
-            initShareUI();
 
             var recognizeModel = e.Parameter as ImageRecognizeViewModel;
             if(recognizeModel != null)
             {
-                previewImage.Source = recognizeModel.Image;
+                // Nên là Recog Image
+                //previewImage.Source = recognizeModel.Image;
+                //recognizeModel.RecognizedImage = recognizeModel.RecognizedImage.Resize(
+                //    (int)this.previewImage.Width,
+                //    (int)this.previewImage.Height,
+                //    WriteableBitmapExtensions.Interpolation.Bilinear
+                //    );
+                //recognizeModel.ShowRecognizedRect();
+                previewImage.Source = recognizeModel.RecognizedImage;
             }
 
             //fromLanguage.SelectedItem = "English";
@@ -63,7 +92,8 @@ namespace LanguageDetectApp.Views
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            CharacterRecognizeModel.PairWords.Clear();
+            this._navigationhelper.OnNavigatedFrom(e);
+            //CharacterRecognizeModel.PairWords.Clear();
         }
         #endregion
 

@@ -11,6 +11,7 @@ using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
+using Windows.UI;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -20,7 +21,7 @@ using WindowsPreview.Media.Ocr;
 
 namespace LanguageDetectApp.Model
 {
-    public class Util
+    public static class Util
     {
         #region Test Value
         public static Point FrenchPosition = new Point(48.851835, 2.304811);
@@ -478,6 +479,18 @@ new KeyValuePair<string, string>( "zu","ZA")
             return countryreturn;
 
         }
+
+        //public static void DrawRectangle(this WriteableBitmap bmp, Rect bound, Color color, int thickness)
+        //{
+        //    int top = (int) bound.Top;          //min y
+        //    int bottom = (int) bound.Bottom;    //max y
+        //    int left = (int) bound.Left;        //min x
+        //    int right = (int) bound.Right;      //max x
+        //    bmp.DrawLineAa(left, top, right, top, color, thickness);            // top
+        //    bmp.DrawLineAa(left, bottom, right, bottom, color, thickness);      // bot
+        //    bmp.DrawLineAa(left, top, left, bottom, color, thickness);          // left
+        //    bmp.DrawLineAa(right, top, right, bottom, color, thickness);        // right
+        //}
     }
 
 }

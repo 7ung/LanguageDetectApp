@@ -4,36 +4,58 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Storage;
 
 namespace LanguageDetectApp.Model
 {
     public class FileModel : INotifyPropertyChanged
     {
         public FileModel()
-        { }
+        {
+        }
 
         public FileModel(string name)
         {
             Name = name;
+            Content = String.Empty;
+            File = null;
         }
 
-        public FileModel(string name, string content)
+        public FileModel(StorageFile file, string name, string content)
         {
             Name = name;
             Content = content;
+            File = file;
         }
 
         private string _content;
         private string _path;
         private string _name;
 
+        private StorageFile _storageFile;
+
+        public StorageFile File
+        {
+            get { return _storageFile; }
+            set
+            {
+                if (_storageFile != value)
+                {
+                    _storageFile = value;
+                    onPropertyChanged("File");
+                }
+            }
+        }
         public string Name
         {
             get { return _name; }
             set
             {
-                _name = value;
-                onPropertyChanged("Name");
+                if (_name != value)
+                {
+                    _name = value;
+                    onPropertyChanged("Name");
+                }
             }
         }
 
@@ -43,8 +65,11 @@ namespace LanguageDetectApp.Model
             get { return _content; }
             set
             {
-                _content = value;
-                onPropertyChanged("Content");
+                if (_content != value)
+                {
+                    _content = value;
+                    onPropertyChanged("Content");                    
+                }
             }
         }
 
@@ -53,8 +78,12 @@ namespace LanguageDetectApp.Model
             get { return _path; }
             set
             {
-                _path = value;
-                onPropertyChanged("Path");
+                if (_path  != value)
+                {
+                    _path = value;
+                    onPropertyChanged("Path");             
+                }
+
             }
         }
         

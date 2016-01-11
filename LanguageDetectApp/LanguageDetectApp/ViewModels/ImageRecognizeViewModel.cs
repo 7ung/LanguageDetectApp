@@ -39,6 +39,7 @@ namespace LanguageDetectApp.ViewModels
         private OcrEngine _ocrEngine;
 
         private eState _currentState = eState.Scale;
+
         #endregion
 
         public string Path
@@ -64,16 +65,31 @@ namespace LanguageDetectApp.ViewModels
         public WriteableBitmap Image
         {
             get { return _imageModel.Image; }
-            set {
+            set
+            {
                 if (_imageModel.Image != value)
                 {
-                _imageModel.Image = value;
-                onPropertyChanged("Image");
-            }
+                    _imageModel.Image = value;
+                    onPropertyChanged("Image");
+                }
 
             }
         }
-
+        public WriteableBitmap RecognizedImage
+        {
+            get
+            {
+                return _imageModel.RecognizedImage;
+            }
+            set
+            {
+                if (_imageModel.RecognizedImage != value)
+                {
+                    _imageModel.RecognizedImage = value;
+                    onPropertyChanged("RecognizedImage");
+                }
+            }
+        }
         public OcrLanguage Language
         {
             get { return _ocrEngine.Language; }
@@ -92,13 +108,47 @@ namespace LanguageDetectApp.ViewModels
         #region Method
         public void CropImage(Rect rect)
         {
-            Image = Image.Crop(rect);
+            // Nên gán recog = image.crop
+            //Image = Image.Crop(rect);
+            RecognizedImage = Image.Crop(rect);
         }
 
         public void StandardImageForRecognize()
         {
-            int width = Image.PixelWidth;
-            int height = Image.PixelHeight;
+            // Nên là Recog
+            //int width = Image.PixelWidth;
+            //int height = Image.PixelHeight;
+
+            //bool flag = false;
+
+            //if (width < 40)
+            //{
+            //    width = 40;
+            //    flag = (flag == false) ? true : flag;
+            //}
+            //if (width > 2600)
+            //{
+            //    flag = (flag == false) ? true : flag;
+            //}
+            //if (height < 40)
+            //{
+            //    width = 40;
+            //    flag = (flag == false) ? true : flag;
+            //}
+            //if (height > 2600)
+            //{
+            //    flag = (flag == false) ? true : flag;
+            //}
+
+            //if (flag == true)
+            //{
+            //    Image = Image.Resize(
+            //                    width,
+            //                    height,
+            //                    WriteableBitmapExtensions.Interpolation.Bilinear);
+            //}
+            int width = RecognizedImage.PixelWidth;
+            int height = RecognizedImage.PixelHeight;
 
             bool flag = false;
 
@@ -123,17 +173,21 @@ namespace LanguageDetectApp.ViewModels
 
             if (flag == true)
             {
-                Image = Image.Resize(
+                RecognizedImage = RecognizedImage.Resize(
                                 width,
                                 height,
                                 WriteableBitmapExtensions.Interpolation.Bilinear);
             }
+
         }
 
         public async Task RecognizeImage()
         {
+            // Nên là Recog image
+
             // Hình ảnh muốn lấy được text phải dạng gray scale
-            WriteableBitmap temp = ImageBehavior.GrayScale(this.Image);
+            //WriteableBitmap temp = ImageBehavior.GrayScale(this.Image);
+            WriteableBitmap temp = ImageBehavior.GrayScale(this.RecognizedImage);
             this.StandardImageForRecognize();
 
             // Bắt đầu tính toán nhận diện chữ.
@@ -175,16 +229,17 @@ namespace LanguageDetectApp.ViewModels
 
                             CharacterRecognizeModel.PairWords.Add(
                                     new KeyValuePair<string, Rect>(word.Text, bound));
-
+#if DEBUG
                             Debug.WriteLine(word.Text);
-
+#endif
                             // WriteableBitmap.DrawRectangle là phương thức mở rộng từ lớp WriteableBitmapExtension. của thư viện WriteableEx
-                            this.Image.DrawRectangle(
-                                            (int)bound.Left,
-                                            (int)bound.Top,
-                                            (int)bound.Right,
-                                            (int)bound.Bottom,
-                                            Windows.UI.Color.FromArgb(255, 110, 210, 255));
+
+                            this.RecognizedImage.DrawRectangle(
+                                (int)bound.Left,
+                                (int)bound.Top,
+                                (int)bound.Right,
+                                (int)bound.Bottom,
+                                Windows.UI.Color.FromArgb(255, 110, 210, 255));
                         }
                     }
             }
@@ -193,6 +248,21 @@ namespace LanguageDetectApp.ViewModels
                 // Khi không nhận được ảnh thì quăng lỗi nên catch để tránh bị break
                 Debug.WriteLine(msg);
             }
+        }
+
+        public void ShowRecognizedRect()
+        {
+            foreach (var item in CharacterRecognizeModel.PairWords)
+            {
+                Rect bound = item.Value;
+                this.RecognizedImage.DrawRectangle(
+                    (int)bound.Left,
+                    (int)bound.Top,
+                    (int)bound.Right,
+                    (int)bound.Bottom,
+                    Windows.UI.Color.FromArgb(255, 110, 210, 255));
+            }
+
         }
         #endregion
 

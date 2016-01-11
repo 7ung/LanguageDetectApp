@@ -79,7 +79,8 @@ namespace LanguageDetectApp.Model
 
         public static void Clear()
         {
-            _pairWords.Clear();
+            if (_pairWords != null)
+                _pairWords.Clear();
         }
 
         public static async Task<OcrLanguage> InitLanguage()

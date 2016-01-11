@@ -26,8 +26,11 @@ namespace LanguageDetectApp.ViewModels
             get { return _storageFolder; }
             set
             {
-                _storageFolder = value;
-                OnPropertyChanged(new PropertyChangedEventArgs("SavedFolder"));
+                if (_storageFolder != value)
+                {
+                    _storageFolder = value;
+                    OnPropertyChanged(new PropertyChangedEventArgs("SavedFolder"));                    
+                }
             }
         }
 
@@ -45,7 +48,8 @@ namespace LanguageDetectApp.ViewModels
             {
 
                 var files = await SavedFolder.GetFilesAsync();
-                if (files.Any())
+                // Tùng: for each thì không cần check any
+                //if (files.Any())
                 {
                     foreach (var item in files)
                     {
@@ -56,8 +60,28 @@ namespace LanguageDetectApp.ViewModels
 
                         var content = encoding.GetString(data, 0, data.Length);
 
-                        this.Add(new FileModel(item.Name, content));
+                        this.Add(new FileModel(item, item.Name, content));
                     }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+        }
+
+        public async Task Delete(FileModel model)
+        {
+            try
+            {
+                if (model.File == null)
+                    return;
+                await model.File.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                var file = this.Where(f => f.Name == model.Name);
+                if (file.Any())
+                {
+                    var storagefile = file.First();
+                    this.Remove(storagefile);
                 }
             }
             catch (Exception ex)
@@ -70,13 +94,47 @@ namespace LanguageDetectApp.ViewModels
         {
             try
             {
-                var file = await SavedFolder.CreateFileAsync(model.Name + ".txt");
-                await FileIO.WriteTextAsync(file, model.Content);
-
-                if(!this.Contains(model))
+                if (model.Name.Contains(".txt") == false)
                 {
-                    this.Add(model);
+                    model.Name += ".txt";
                 }
+                //var allfile = await _storageFolder.GetFilesAsync();
+                //IEnumerable<StorageFile> foundfile = null;
+                //if (allfile.Any())
+                //    foundfile = allfile.Where(f => f.Name == model.Name);
+                //if (foundfile.Any())
+                //{
+                //    await FileIO.WriteTextAsync(foundfile.First(), model.Content);
+                //}
+                //else
+                //{                
+                //    var file = await SavedFolder.CreateFileAsync(model.Name);
+                //    await FileIO.WriteTextAsync(file, model.Content);
+                //}
+                if (model.File == null)
+                {
+                    var file = await SavedFolder.CreateFileAsync(model.Name);
+                    model.File = file;
+                    await FileIO.WriteTextAsync(file, model.Content);
+                    this.Add(model);
+                 
+                }
+                else
+                {
+                    await FileIO.WriteTextAsync(model.File, model.Content);
+                    var file = this.Where(f => f.Name == model.Name);
+                    if (file.Any())
+                    {
+                        var storagefile = file.First();
+                        storagefile.Content = model.Content;
+                        storagefile.File = model.File;
+                    }
+                }
+
+                //if(!this.Contains(model))
+                //{
+                //    this.Add(model);
+                //}
             }
             catch (Exception ex)
             {
