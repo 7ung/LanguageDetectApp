@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
@@ -105,9 +106,29 @@ namespace LanguageDetectApp.Views
             }
         }
 
+        ImageBrush addImage = new ImageBrush()
+        {
+            ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/add.png", UriKind.RelativeOrAbsolute)),
+            Stretch = Stretch.Uniform
+        };
+
+        ImageBrush minusImage = new ImageBrush()
+        {
+            ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/minus.png", UriKind.RelativeOrAbsolute)),
+            Stretch = Stretch.Uniform
+        };
+
         private void CollapseBtnClick(object sender, RoutedEventArgs e)
         {
             _contactModel.PageCollapsed = !_contactModel.PageCollapsed;
+            if (_contactModel.PageCollapsed)
+            {
+                CollapseBtn.Background = addImage;
+            }
+            else
+            {
+                CollapseBtn.Background = minusImage;
+            }
         }
         #endregion
     }

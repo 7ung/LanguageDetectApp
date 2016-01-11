@@ -30,15 +30,7 @@ namespace LanguageDetectApp.Views
     public sealed partial class ImageRecognizePage : Page, IFileOpenPickerContinuable
     {
         private ImageRecognizeViewModel _imageViewModel;
-
-        //// rect để tính
-        //Rect _cropRect;
-        //// rect để vẽ
-        //Rectangle _cropDrawnRect;
-
-        //Point _startPoint;
-        //Point _endPoint;
-
+        
         public ImageRecognizePage()
         {
             this.InitializeComponent();
@@ -62,9 +54,6 @@ namespace LanguageDetectApp.Views
             base.OnNavigatedFrom(e);
 
             _imageViewModel.CurrentState = eState.Scale;
-
-            //if (_cropDrawnRect != null && drawCanvas.Children.Contains(_cropDrawnRect))
-            //    drawCanvas.Children.Remove(_cropDrawnRect);
         }
 
         private void browseBtn_Click(object sender, RoutedEventArgs e)
@@ -92,6 +81,10 @@ namespace LanguageDetectApp.Views
                 _imageViewModel.Path = args.Files.First().Path;
                 imageView.Source = await Util.LoadImage(args.Files.First());
 
+                // có hình mới hiện 2 nút tiếp
+                cropBtn.IsEnabled = true;
+                regcognizeBtn.IsEnabled = true;
+
                 // set lại scale nhỏ nhất
                 CaculateMinScale(true);
             }
@@ -101,6 +94,9 @@ namespace LanguageDetectApp.Views
         {
             // crop hình
             CropImage();
+
+            // ẩn
+            _imageViewModel.CurrentState = eState.Scale;
 
             // đọc hình
             await _imageViewModel.RecognizeImage();
@@ -187,114 +183,15 @@ namespace LanguageDetectApp.Views
             if (_imageViewModel.CurrentState == eState.Scale)
             {
                 _imageViewModel.CurrentState = eState.Crop;
-
-                //_cropRect = new Rect();
-                //_cropDrawnRect = new Rectangle()
-                //{
-                //    Fill = new SolidColorBrush(Windows.UI.Color.FromArgb(100, 255, 255, 255)),
-                //    Width = _cropRect.Width,
-                //    Height = _cropRect.Height,
-                //    StrokeThickness = 1,
-                //    Stroke = new SolidColorBrush(Windows.UI.Colors.White)
-                //};
-
-                //drawCanvas.Children.Add(_cropDrawnRect);
-
                 cropControl.Start();
             }
             else
             {
                 _imageViewModel.CurrentState = eState.Scale;
-
-                //drawCanvas.Children.Remove(_cropDrawnRect);
                 cropControl.End();
             }
         }
-
-        //private void drawCanvas_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
-        //{
-        //    if (e.Handled)
-        //        return;
-
-        //    _startPoint = e.Position;
-
-        //    // reset rect
-        //    Canvas.SetLeft(_cropDrawnRect, _startPoint.X);
-        //    Canvas.SetTop(_cropDrawnRect, _startPoint.Y);
-        //    _cropDrawnRect.Width = 0;
-        //    _cropDrawnRect.Height = 0;
-        //}
-
-        //private void cropPoint_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
-        //{
-        //    var point = sender as Ellipse;
-            
-        //    Canvas.SetLeft(cropPoint1, Canvas.GetLeft(cropPoint1) + e.Delta.Translation.X);
-        //    Canvas.SetTop(cropPoint1, Canvas.GetTop(cropPoint1) + e.Delta.Translation.Y);
-
-        //    Canvas.SetLeft(_cropDrawnRect, Canvas.GetLeft(_cropDrawnRect) + e.Delta.Translation.X);
-        //    Canvas.SetTop(_cropDrawnRect, Canvas.GetTop(_cropDrawnRect) + e.Delta.Translation.Y);
-        //}
-
-        //private void cropPoint_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
-        //{
-        //    e.Handled = true;
-            
-        //}
-
-        //private void drawCanvas_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
-        //{
-        //    if (e.Handled)
-        //        return;
-
-        //    _endPoint = e.Position;
-
-        //    if (_startPoint.X > _endPoint.X && _startPoint.Y > _endPoint.Y)
-        //    {
-        //        _cropRect.X = _endPoint.X;
-        //        _cropRect.Width = _startPoint.X - _endPoint.X;
-        //        _cropRect.Y = _endPoint.Y;
-        //        _cropRect.Height = _startPoint.Y - _endPoint.Y;
-        //    }
-        //    else if (_startPoint.X < _endPoint.X && _startPoint.Y < _endPoint.Y)
-        //    {
-        //        _cropRect.X = _startPoint.X;
-        //        _cropRect.Width = _endPoint.X - _startPoint.X;
-        //        _cropRect.Y = _startPoint.Y;
-        //        _cropRect.Height = _endPoint.Y - _startPoint.Y;
-        //    }
-        //    else if (_startPoint.X > _endPoint.X && _startPoint.Y < _endPoint.Y)
-        //    {
-        //        _cropRect.X = _endPoint.X;
-        //        _cropRect.Width = _startPoint.X - _endPoint.X;
-        //        _cropRect.Y = _startPoint.Y;
-        //        _cropRect.Height = _endPoint.Y - _startPoint.Y;
-        //    }
-        //    else if (_startPoint.X < _endPoint.X && _startPoint.Y > _endPoint.Y)
-        //    {
-        //        _cropRect.X = _startPoint.X;
-        //        _cropRect.Width = _endPoint.X - _startPoint.X;
-        //        _cropRect.Y = _endPoint.Y;
-        //        _cropRect.Height = _startPoint.Y - _endPoint.Y;
-        //    }
-
-        //    _cropDrawnRect.Width = _cropRect.Width;
-        //    _cropDrawnRect.Height = _cropRect.Height;
-
-        //    Canvas.SetLeft(_cropDrawnRect, _cropRect.Left);
-        //    Canvas.SetTop(_cropDrawnRect, _cropRect.Top);
-        //}
-
-        //private void drawCanvas_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
-        //{
-        //    if (e.Handled)
-        //        return;
-
-        //    cropPoint1.Visibility = Visibility.Visible;
-        //    Canvas.SetLeft(cropPoint1, _cropRect.Left - cropPoint1.Width / 2);
-        //    Canvas.SetTop(cropPoint1, _cropRect.Top - cropPoint1.Height / 2);
-        //}
-
+        
         private void ListPickerFlyOutPicker(ListPickerFlyout sender, ItemsPickedEventArgs args)
         {
             var items = args.AddedItems;
@@ -305,6 +202,11 @@ namespace LanguageDetectApp.Views
             _imageViewModel.Language = (OcrLanguage)Enum.Parse(
                  typeof(OcrLanguage),
                  items.First().ToString());
+        }
+
+        private void scrollViewer_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            CaculateMinScale(true);
         }
     }
 }
