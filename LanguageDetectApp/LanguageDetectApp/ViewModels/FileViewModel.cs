@@ -98,19 +98,7 @@ namespace LanguageDetectApp.ViewModels
                 {
                     model.Name += ".txt";
                 }
-                //var allfile = await _storageFolder.GetFilesAsync();
-                //IEnumerable<StorageFile> foundfile = null;
-                //if (allfile.Any())
-                //    foundfile = allfile.Where(f => f.Name == model.Name);
-                //if (foundfile.Any())
-                //{
-                //    await FileIO.WriteTextAsync(foundfile.First(), model.Content);
-                //}
-                //else
-                //{                
-                //    var file = await SavedFolder.CreateFileAsync(model.Name);
-                //    await FileIO.WriteTextAsync(file, model.Content);
-                //}
+
                 if (model.File == null)
                 {
                     var file = await SavedFolder.CreateFileAsync(model.Name);
@@ -130,11 +118,6 @@ namespace LanguageDetectApp.ViewModels
                         storagefile.File = model.File;
                     }
                 }
-
-                //if(!this.Contains(model))
-                //{
-                //    this.Add(model);
-                //}
             }
             catch (Exception ex)
             {

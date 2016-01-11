@@ -29,14 +29,25 @@
 
             <Ellipse Name="cropPoint1" 
                      Fill="{StaticResource TurquoiseFlatButton}" 
-                     Height="25" Stroke="White"
+                     Height="25"
                      StrokeThickness="0" 
                      Width="25" 
                      Visibility="Collapsed" 
-                     ManipulationDelta="cropPoint_ManipulationDelta" ManipulationStarted="cropPoint_ManipulationStarted" ManipulationMode="All" Canvas.ZIndex="2"/>
-            <Ellipse Name="cropPoint2" Fill="{StaticResource TurquoiseFlatButton}" Height="25" Stroke="White" StrokeThickness="0" Width="25" Visibility="Collapsed" ManipulationDelta="cropPoint_ManipulationDelta" Canvas.ZIndex="2" ManipulationStarted="cropPoint_ManipulationStarted" ManipulationMode="All"/>
-            <Ellipse Name="cropPoint3" Fill="{StaticResource TurquoiseFlatButton}" Height="25" Stroke="White" StrokeThickness="0" Width="25" Visibility="Collapsed" ManipulationDelta="cropPoint_ManipulationDelta" Canvas.ZIndex="2"/>
-            <Ellipse Name="cropPoint4" Fill="{StaticResource TurquoiseFlatButton}" Height="25" Stroke="White" StrokeThickness="0" Width="25" Visibility="Collapsed" ManipulationDelta="cropPoint_ManipulationDelta" Canvas.ZIndex="2"/>
+                     ManipulationDelta="cropPoint_ManipulationDelta" 
+                     ManipulationStarted="cropPoint_ManipulationStarted" 
+                     ManipulationMode="All" 
+                     Canvas.ZIndex="2"/>
+            
+            <Ellipse Name="cropPoint2" 
+                     Fill="{StaticResource TurquoiseFlatButton}" 
+                     Height="25" 
+                     StrokeThickness="0"
+                     Width="25" 
+                     Visibility="Collapsed" 
+                     ManipulationDelta="cropPoint_ManipulationDelta" 
+                     Canvas.ZIndex="2" 
+                     ManipulationStarted="cropPoint_ManipulationStarted" 
+                     ManipulationMode="All"/>
             
         </Canvas>
     </Grid>

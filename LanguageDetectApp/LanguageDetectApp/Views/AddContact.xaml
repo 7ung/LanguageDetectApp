@@ -6,10 +6,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:LanguageDetectApp.ViewModels"
+    xmlns:m="using:LanguageDetectApp.Model"
     xmlns:sys="using:System"
     mc:Ignorable="d" RequestedTheme="Light">
     <Page.Resources>
         <vm:PageCollapsedConverter x:Key="pagecollapsed"></vm:PageCollapsedConverter>
+       
         <!--<sys:String x:Key="string"></sys:String>-->
         <!--<sys:DateTime x:Key="datetime"></sys:DateTime>-->
     </Page.Resources>
@@ -27,7 +29,7 @@
                     <Button Name="btnAddImg" VerticalAlignment="Bottom" Click="AddImageClick" Style="{StaticResource ImageButtonStyle}" BorderThickness="0" Width="{Binding ActualWidth, ElementName=thumbnail}" Height="{Binding ActualHeight, ElementName=thumbnail}" MinWidth="0" MinHeight="0" Background="{x:Null}" />
 
                     <Button HorizontalAlignment="Right" Name="CollapseBtn"
-                        Click="CollapseBtnClick" Style="{StaticResource FlatStyle}" BorderThickness="0" Width="50" MinWidth="0" MinHeight="0" Height="50" Foreground="{x:Null}">
+                        Click="CollapseBtnClick" Style="{StaticResource ImageButtonStyle}" BorderThickness="0" Width="50" MinWidth="0" MinHeight="0" Height="50" Foreground="{x:Null}">
                         <Button.Background>
                             <ImageBrush Stretch="Uniform" ImageSource="ms-appx:///Assets/add.png"/>
                         </Button.Background>

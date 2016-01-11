@@ -92,6 +92,9 @@ namespace LanguageDetectApp.Views
             {
                 await _fileViewModel.SaveFile(_saveFile);
                 savePanel.Visibility = Visibility.Collapsed;
+
+                saveBtn.IsEnabled = false;
+                cancelBtn.IsEnabled = false;
             }
             
         }
@@ -100,7 +103,7 @@ namespace LanguageDetectApp.Views
         {
             // Clear frame trước khi chuyển tới home
             Frame.BackStack.Clear();
-            Frame.Navigate(typeof(MainPage));
+            Frame.Navigate(typeof(ImageRecognizePage));
         }
 
         private void cancelBtn_Click(object sender, RoutedEventArgs e)

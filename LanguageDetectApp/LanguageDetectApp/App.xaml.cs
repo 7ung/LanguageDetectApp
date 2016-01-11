@@ -52,7 +52,7 @@ namespace LanguageDetectApp
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
 
-            HardwareButtons.BackPressed +=HardwareButtons_BackPressed;
+            //HardwareButtons.BackPressed +=HardwareButtons_BackPressed;
         }
 
         private void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)

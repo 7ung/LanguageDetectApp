@@ -19,7 +19,7 @@
     </Page.Resources>
 
     <Grid>
-
+        <Image Name="previewImage" Source="ms-appx:///Assets/picture.png" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Opacity="0.5"/>
         <ScrollViewer x:Name="scrollViewer"
                 ZoomMode="Enabled" 
                 MaxZoomFactor="2"
@@ -27,7 +27,7 @@
                 VerticalScrollBarVisibility="Auto" 
                 HorizontalContentAlignment="Center" 
                 VerticalContentAlignment="Center" 
-                IsEnabled="{Binding CurrentState, Converter={StaticResource stateToEnableConverter}, ConverterParameter=ScaleElement, Source={StaticResource imageDataContext}}">
+                IsEnabled="{Binding CurrentState, Converter={StaticResource stateToEnableConverter}, ConverterParameter=ScaleElement, Source={StaticResource imageDataContext}}" DoubleTapped="scrollViewer_DoubleTapped">
 
             <Image  x:Name="imageView" 
                             Source="{Binding Path=Image, Mode=TwoWay, Source={StaticResource imageDataContext}}" 
@@ -55,7 +55,7 @@
                     <ListPickerFlyout.ItemTemplate>
                         <DataTemplate>
                             <StackPanel>
-                                <TextBlock Text="{Binding }" HorizontalAlignment="Left" />
+                                <TextBlock Text="{Binding}" HorizontalAlignment="Left" />
                             </StackPanel>
                         </DataTemplate>
                     </ListPickerFlyout.ItemTemplate>
@@ -68,8 +68,8 @@
         <CommandBar Background="White" Foreground="{StaticResource TurquoiseFlatButton}">
             <CommandBar.PrimaryCommands>
                 <AppBarButton x:Name="browseBtn" Label="Browse" Icon="BrowsePhotos" Click="browseBtn_Click" />
-                <AppBarButton x:Name="cropBtn" Label="Crop" Icon="Crop" Click="cropBtn_Click" />
-                <AppBarButton x:Name="regcognizeBtn" Label="Scan" Icon="Forward" Click="regcognizeBtn_Click" />
+                <AppBarButton x:Name="cropBtn" Label="Crop" Icon="Crop" Click="cropBtn_Click" IsEnabled="False" />
+                <AppBarButton x:Name="regcognizeBtn" Label="Scan" Icon="Forward" Click="regcognizeBtn_Click" IsEnabled="False" />
             </CommandBar.PrimaryCommands>
         </CommandBar>
     </Page.BottomAppBar>
