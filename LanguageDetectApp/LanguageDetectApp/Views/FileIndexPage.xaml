@@ -7,19 +7,19 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:LanguageDetectApp.ViewModels"
     xmlns:m="using:LanguageDetectApp.Model"
-    mc:Ignorable="d" RequestedTheme="Light" Foreground="White">
+    mc:Ignorable="d" RequestedTheme="Light" Foreground="White" NavigationCacheMode="Enabled">
 
     <Page.Resources>
         <vm:VisibilityConverter x:Key="VisibilityConverter"/>
         <vm:FileViewModel x:Key="filesSource"/>
         <m:FileModel x:Key="saveFileSource"/>
         <DataTemplate x:Key="fileItemTemplate">
-            <StackPanel Orientation="Horizontal" Tapped="StackPanel_Tapped">
+            <StackPanel Orientation="Horizontal" Tapped="StackPanel_Tapped" RightTapped="StackPannel_RightTapped" Width="800" >
                 <Image x:Name="image" 
                        Height="50" Width="50" 
                        Source="ms-appx:///Assets/document.png"
                        Margin="10"/>
-                <TextBlock Text="{Binding Name}" FontSize="23" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Left" TextWrapping="WrapWholeWords"/>
+                <TextBlock Text="{Binding Name}" FontSize="23" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Stretch" TextWrapping="WrapWholeWords"  SelectionHighlightColor="{x:Null}"/>
             </StackPanel>
         </DataTemplate>
     </Page.Resources>
@@ -51,7 +51,7 @@
                      Margin="0" TextWrapping="Wrap" 
                      Text="{Binding Content, Mode=TwoWay, Source={StaticResource saveFileSource}}" 
                      VerticalAlignment="Stretch"
-                     BorderThickness="0" Height="160"/>
+                     BorderThickness="0" Height="160" AcceptsReturn="True"/>
 
         </StackPanel>
         
@@ -61,7 +61,6 @@
             ItemsSource="{Binding Source={StaticResource filesSource}}"
             Grid.Row="2" Foreground="White"
             />
-        
     </Grid>
 
     <Page.BottomAppBar>

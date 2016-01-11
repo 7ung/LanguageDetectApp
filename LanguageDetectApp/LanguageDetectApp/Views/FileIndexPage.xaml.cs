@@ -1,4 +1,5 @@
-﻿using LanguageDetectApp.Model;
+﻿using LanguageDetachApp.Common;
+using LanguageDetectApp.Model;
 using LanguageDetectApp.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -26,10 +27,24 @@ namespace LanguageDetectApp.Views
     {
         private FileViewModel _fileViewModel;
         private FileModel _saveFile;
+        private NavigationHelper _navigationhelper;
 
+        #region Constructor & OnNavigated
         public FileIndexPage()
         {
             this.InitializeComponent();
+
+            _navigationhelper = new NavigationHelper(this);
+            _navigationhelper.LoadState += Navigationhelper_LoadState;
+            _navigationhelper.SaveState += Navigationhelper_SaveState;
+        }
+
+        private void Navigationhelper_SaveState(object sender, SaveStateEventArgs e)
+        {
+        }
+
+        private void Navigationhelper_LoadState(object sender, LoadStateEventArgs e)
+        {
         }
 
         /// <summary>
@@ -39,6 +54,8 @@ namespace LanguageDetectApp.Views
         /// This parameter is typically used to configure the page.</param>
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
+            this._navigationhelper.OnNavigatedTo(e);
+
             _fileViewModel = Resources["filesSource"] as FileViewModel;
             _saveFile = Resources["saveFileSource"] as FileModel;
 
@@ -55,8 +72,20 @@ namespace LanguageDetectApp.Views
             {
                 savePanel.Visibility = Visibility.Collapsed;
             }
-        }
+            if (nameText.IsReadOnly == true)
+            {
+                nameText.IsReadOnly = false;                
+            }
 
+        }
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            this._navigationhelper.OnNavigatedFrom(e);
+            //CharacterRecognizeModel.PairWords.Clear();
+        }
+        #endregion
+
+        #region User Event Handled
         private async void saveBtn_Click(object sender, RoutedEventArgs e)
         {
             if (savePanel.Visibility == Visibility.Visible)
@@ -69,6 +98,8 @@ namespace LanguageDetectApp.Views
 
         private void homeBtn_Click(object sender, RoutedEventArgs e)
         {
+            // Clear frame trước khi chuyển tới home
+            Frame.BackStack.Clear();
             Frame.Navigate(typeof(MainPage));
         }
 
@@ -89,10 +120,27 @@ namespace LanguageDetectApp.Views
                 {
                     _saveFile.Name = model.Name;
                     _saveFile.Content = model.Content;
+                    _saveFile.File = model.File;
+
+                    nameText.IsReadOnly = true;
 
                     savePanel.Visibility = Visibility.Visible;
                     saveBtn.IsEnabled = true;
                     cancelBtn.IsEnabled = true;
+                }
+            }
+        }
+        #endregion
+
+        private async void StackPannel_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            var panel = sender as StackPanel;
+            if (panel != null)
+            {
+                var model = panel.DataContext as FileModel;
+                if (model != null)
+                {
+                    await _fileViewModel.Delete(model);
                 }
             }
         }

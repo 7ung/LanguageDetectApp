@@ -16,6 +16,7 @@ namespace LanguageDetectApp.Model
         #region Private Attributes
         private WriteableBitmap _image;
         private StorageFile _storageFile;
+        private WriteableBitmap _recognizedimage;
         #endregion
 
         #region Property
@@ -39,6 +40,17 @@ namespace LanguageDetectApp.Model
                 {
                     _image = value;
                     OnPropertyChanged("Image");
+                }
+            }
+        }
+        public WriteableBitmap RecognizedImage
+        {
+            get { return _recognizedimage; }
+            set {
+                if (_recognizedimage != value)
+                {
+                    _recognizedimage = value;
+                    OnPropertyChanged("RecognizedImage");
                 }
             }
         }

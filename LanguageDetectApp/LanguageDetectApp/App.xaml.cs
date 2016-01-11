@@ -1,4 +1,4 @@
-﻿using LanguageDetectApp.Common;
+﻿using LanguageDetachApp.Common;
 using LanguageDetectApp.Model;
 using LanguageDetectApp.Views;
 using System;
@@ -97,7 +97,7 @@ namespace LanguageDetectApp
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
-
+                SuspensionManager.RegisterFrame(rootFrame, "scenarioFrame");
                 // TODO: change this value to a cache size that is appropriate for your application
                 rootFrame.CacheSize = 1;
 
@@ -229,7 +229,7 @@ namespace LanguageDetectApp
 
             if (rootFrame.Content == null)
             {
-                rootFrame.Navigate(typeof(MainPage));
+                rootFrame.Navigate(typeof(ImageRecognizePage));
             }
 
             var continuationEventArgs = e as IContinuationActivatedEventArgs;

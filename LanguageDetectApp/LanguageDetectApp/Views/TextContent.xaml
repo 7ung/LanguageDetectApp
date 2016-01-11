@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:LanguageDetectApp.ViewModels"
     xmlns:m="using:LanguageDetectApp.Model"
-    mc:Ignorable="d" Foreground="White" RequestedTheme="Light">
+    mc:Ignorable="d" Foreground="White" RequestedTheme="Light" NavigationCacheMode="Enabled">
 
     <Page.Resources>
         <vm:TextContentConverter x:Key="textconverter"></vm:TextContentConverter>

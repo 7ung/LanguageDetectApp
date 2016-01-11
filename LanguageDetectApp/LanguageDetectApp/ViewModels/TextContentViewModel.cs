@@ -62,7 +62,9 @@ namespace LanguageDetectApp.ViewModels
         
         public string Content
         {
-            get { return _content; }
+            get {
+                return _content; 
+            }
             set
             {
                 _content = value;

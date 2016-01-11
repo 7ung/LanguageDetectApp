@@ -1,4 +1,4 @@
-﻿using LanguageDetectApp.Common;
+﻿using LanguageDetachApp.Common;
 using LanguageDetectApp.Model;
 using LanguageDetectApp.ViewModels;
 using LanguageDetectApp.Views;
@@ -15,6 +15,7 @@ using Windows.ApplicationModel.Activation;
 using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Phone.UI.Input;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
@@ -67,6 +68,7 @@ namespace LanguageDetectApp
             get { return this.scenarios; }
         }
 
+        #region Constructor & OnNavigate
         public MainPage()
         {
             this.InitializeComponent();
@@ -92,8 +94,10 @@ namespace LanguageDetectApp
          //   ocrEngine = new OcrEngine(language);
         //    Debug.WriteLine(language.ToString());
         //    Frame frame = Window.Current.Content as Frame;
-            SuspensionManager.RegisterFrame(ScenarioFrame, "scenarioFrame");
+           // SuspensionManager.RegisterFrame(ScenarioFrame, "scenarioFrame");
 
+            // Định nghĩa lại Back Button
+            //HardwareButtons.BackPressed +=HardwareButtons_BackPressed;
             if (ScenarioFrame.Content == null)
             {
                 // When the navigation stack isn't restored navigate to the ScenarioList 
@@ -102,7 +106,23 @@ namespace LanguageDetectApp
                     throw new Exception("Failed to create scenario list");
                 }
             }
+            CharacterRecognizeModel.Clear();
+            if (wtndection.IsEnabled == false)
+            {
+                wtndection.IsEnabled = true;
+            }
         }
+
+        //private void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
+        //{
+            
+        //    if (_imageViewModel.CurrentState == eState.Crop)
+        //    {
+        //        _imageViewModel.CurrentState = eState.Scale;
+        //        createCropRect_Click(null, new RoutedEventArgs());
+        //        e.Handled = true;
+        //    }
+        //}
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
@@ -114,6 +134,20 @@ namespace LanguageDetectApp
             if (_cropDrawnRect != null && drawCanvas.Children.Contains(_cropDrawnRect))
                 drawCanvas.Children.Remove(_cropDrawnRect);
         }
+
+        // được gọi khi chọn được hình ảnh và chuyển lại vào page này
+        public async void ContinueFileOpenPicker(FileOpenPickerContinuationEventArgs args)
+        {
+            if (args.Files.Any() == true)
+            {
+                _imageViewModel.Path = args.Files.First().Path;
+                imageView.Source = await Util.LoadImage(args.Files.First());
+
+                // set lại scale nhỏ nhất
+                CaculateMinScale(true);
+            }
+        }
+        #endregion
 
         private void BrowseButton_Click(object sender, RoutedEventArgs e)
         {
@@ -132,32 +166,29 @@ namespace LanguageDetectApp
             fileopenpicker.PickSingleFileAndContinue();
         }
 
-        // được gọi khi chọn được hình ảnh và chuyển lại vào page này
-        public async void ContinueFileOpenPicker(FileOpenPickerContinuationEventArgs args)
-        {
-            if (args.Files.Any() == true)
-	        {
-                _imageViewModel.Path = args.Files.First().Path;
-                imageView.Source = await Util.LoadImage(args.Files.First());
-                
-                // set lại scale nhỏ nhất
-                CaculateMinScale(true);
-	        }
-        }
-
         private async void WhatTheNumberButton_Click(object sender, RoutedEventArgs e)
         {
+            if (_imageViewModel.Image == null)
+            {
+#if DEBUG
+                Debug.WriteLine("Không có hình");
+#endif
+                return;
+            }
+            (sender as Button).IsEnabled = false;
+
             // crop hình
             CropImage();
 
             // đọc hình
             await _imageViewModel.RecognizeImage();
+
             
             Frame.Navigate(typeof(TextContent), _imageViewModel);
         }
-        
+
         private void CropImage()
-            {
+        {
             var cropRect = new Rect();
 
             if (_imageViewModel.CurrentState == eState.Crop && _cropRect != null)
@@ -167,7 +198,7 @@ namespace LanguageDetectApp
                 double width, height;
 
                 // kt xem nó ở trong hay lớn ra ngoài
-                if(pos.X > 0)
+                if (pos.X > 0)
                 {
                     width = (_cropRect.X - pos.X);
                 }
@@ -176,7 +207,7 @@ namespace LanguageDetectApp
                     width = (scrollViewer.HorizontalOffset + _cropRect.X);
                 }
 
-                if(pos.Y > 0)
+                if (pos.Y > 0)
                 {
                     height = _cropRect.Y - pos.Y;
                 }
@@ -203,7 +234,7 @@ namespace LanguageDetectApp
                 // Crop hình
                 _imageViewModel.CropImage(cropRect);
             }
-            
+
             // Tính lại scale nhỏ nhất
             CaculateMinScale(true);
         }
@@ -213,10 +244,10 @@ namespace LanguageDetectApp
         /// </summary>
         /// <param name="setScale">Có set scale lại không</param>
         private void CaculateMinScale(bool setScale = false)
-            {
+        {
             double ratio;
-
-            if(_imageViewModel.Image.PixelWidth >= _imageViewModel.Image.PixelHeight)
+            // Image chỗ này nên là image gốc
+            if (_imageViewModel.Image.PixelWidth >= _imageViewModel.Image.PixelHeight)
             {
                 ratio = scrollViewer.ActualWidth / _imageViewModel.Image.PixelWidth;
             }
@@ -224,26 +255,29 @@ namespace LanguageDetectApp
             {
                 ratio = scrollViewer.ActualHeight / _imageViewModel.Image.PixelHeight;
             }
-            
+
             scrollViewer.MinZoomFactor = (float)ratio;
 
             if (setScale)
                 scrollViewer.ChangeView(0, 0, scrollViewer.MinZoomFactor);
         }
-        
+
         private void createCropRect_Click(object sender, RoutedEventArgs e)
-                    {
+        {
+            // Ở hàm HardwareButtons_BackPressed có gọi hàm này với sender = null, e = empty
+            // Nếu hàm này sửa dụng hai đối số trên thì sửa lại HardwareButtons_BackPressed
+
             if (_imageViewModel.CurrentState == eState.Scale)
-                        {
+            {
                 _imageViewModel.CurrentState = eState.Crop;
                 createCropRect.Opacity = 0.5;
 
                 _cropRect = new Rect();
                 _cropDrawnRect = new Rectangle()
                             {
-                    Fill = new SolidColorBrush(Windows.UI.Color.FromArgb(100, 255, 255, 255)),
-                    Width = _cropRect.Width,
-                    Height = _cropRect.Height
+                                Fill = new SolidColorBrush(Windows.UI.Color.FromArgb(100, 255, 255, 255)),
+                                Width = _cropRect.Width,
+                                Height = _cropRect.Height
                             };
 
                 drawCanvas.Children.Add(_cropDrawnRect);
@@ -255,7 +289,7 @@ namespace LanguageDetectApp
 
                 drawCanvas.Children.Remove(_cropDrawnRect);
             }
-            }
+        }
 
         private void drawCanvas_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
         {
