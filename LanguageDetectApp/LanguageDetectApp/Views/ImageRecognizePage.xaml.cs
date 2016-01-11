@@ -1,8 +1,9 @@
-﻿using LanguageDetectApp.Common;
+﻿using LanguageDetachApp.Common;
 using LanguageDetectApp.Model;
 using LanguageDetectApp.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -38,11 +39,11 @@ namespace LanguageDetectApp.Views
 
         //Point _startPoint;
         //Point _endPoint;
-
+        #region Constructor & OnNavigate
         public ImageRecognizePage()
         {
             this.InitializeComponent();
-
+            this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Required;
             // gán static resouce bên xaml để xài
             _imageViewModel = Resources["imageDataContext"] as ImageRecognizeViewModel;
 
@@ -55,6 +56,11 @@ namespace LanguageDetectApp.Views
         
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            CharacterRecognizeModel.Clear();
+            if (regcognizeBtn.IsEnabled == false)
+            {
+                regcognizeBtn.IsEnabled = true;
+            }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -66,7 +72,19 @@ namespace LanguageDetectApp.Views
             //if (_cropDrawnRect != null && drawCanvas.Children.Contains(_cropDrawnRect))
             //    drawCanvas.Children.Remove(_cropDrawnRect);
         }
+        // được gọi khi chọn được hình ảnh và chuyển lại vào page này
+        public async void ContinueFileOpenPicker(FileOpenPickerContinuationEventArgs args)
+        {
+            if (args.Files.Any() == true)
+            {
+                _imageViewModel.Path = args.Files.First().Path;
+                imageView.Source = await Util.LoadImage(args.Files.First());
 
+                // set lại scale nhỏ nhất
+                CaculateMinScale(true);
+            }
+        }
+        #endregion
         private void browseBtn_Click(object sender, RoutedEventArgs e)
         {
             FileOpenPicker fileopenpicker = new FileOpenPicker();
@@ -84,21 +102,16 @@ namespace LanguageDetectApp.Views
             fileopenpicker.PickSingleFileAndContinue();
         }
 
-        // được gọi khi chọn được hình ảnh và chuyển lại vào page này
-        public async void ContinueFileOpenPicker(FileOpenPickerContinuationEventArgs args)
-        {
-            if (args.Files.Any() == true)
-            {
-                _imageViewModel.Path = args.Files.First().Path;
-                imageView.Source = await Util.LoadImage(args.Files.First());
-
-                // set lại scale nhỏ nhất
-                CaculateMinScale(true);
-            }
-        }
-
         private async void regcognizeBtn_Click(object sender, RoutedEventArgs e)
         {
+            if (_imageViewModel.Image == null)
+            {
+#if DEBUG
+                Debug.WriteLine("Không có hình");
+#endif
+                return;
+            }
+            (sender as Button).IsEnabled = false;
             // crop hình
             CropImage();
 

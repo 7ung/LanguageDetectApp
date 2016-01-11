@@ -229,7 +229,7 @@ namespace LanguageDetectApp
 
             if (rootFrame.Content == null)
             {
-                rootFrame.Navigate(typeof(MainPage));
+                rootFrame.Navigate(typeof(ImageRecognizePage));
             }
 
             var continuationEventArgs = e as IContinuationActivatedEventArgs;
