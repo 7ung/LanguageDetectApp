@@ -52,16 +52,24 @@ namespace LanguageDetectApp.Views
 
         private void hardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
         {
-            e.Handled = true;
-
-            if(_imageViewModel.CurrentState == eState.Crop)
+            Frame rootFrame = Window.Current.Content as Frame;
+            if (rootFrame != null)
             {
-                _imageViewModel.CurrentState = eState.Scale;
-                cropControl.End();
-            }
-            else
-            {
-                App.Current.Exit();
+                if (_imageViewModel.CurrentState == eState.Crop)
+                {
+                    _imageViewModel.CurrentState = eState.Scale;
+                    cropControl.End();
+                    e.Handled = true;
+                }
+                else if (rootFrame.CanGoBack == true)
+                {
+                    rootFrame.GoBack();
+                    e.Handled = true;
+                }
+                else
+                {
+                    Application.Current.Exit();
+                }
             }
         }
 
@@ -102,6 +110,7 @@ namespace LanguageDetectApp.Views
                 // enable btn
                 cropBtn.IsEnabled = true;
                 regcognizeBtn.IsEnabled = true;
+                previewImage.Visibility = Visibility.Collapsed;
 
                 // set lại scale nhỏ nhất
                 CaculateMinScale(true);

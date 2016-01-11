@@ -92,6 +92,9 @@ namespace LanguageDetectApp.Views
             {
                 await _fileViewModel.SaveFile(_saveFile);
                 savePanel.Visibility = Visibility.Collapsed;
+
+                saveBtn.IsEnabled = false;
+                cancelBtn.IsEnabled = false;
             }
             
         }

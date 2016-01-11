@@ -19,7 +19,7 @@
     </Page.Resources>
 
     <Grid>
-
+        <Image Name="previewImage" Source="ms-appx:///Assets/picture.png" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Opacity="0.5"/>
         <ScrollViewer x:Name="scrollViewer"
                 ZoomMode="Enabled" 
                 MaxZoomFactor="2"
