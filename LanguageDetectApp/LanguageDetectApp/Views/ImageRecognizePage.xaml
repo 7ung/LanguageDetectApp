@@ -1,0 +1,76 @@
+﻿<Page
+    x:Class="LanguageDetectApp.Views.ImageRecognizePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LanguageDetectApp.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:LanguageDetectApp.ViewModels"
+    xmlns:m="using:LanguageDetectApp.Model"
+    xmlns:v="using:LanguageDetectApp.Views"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <vm:ImageRecognizeViewModel x:Key="imageDataContext" ></vm:ImageRecognizeViewModel>
+        <vm:StateToEnableConverter x:Key="stateToEnableConverter" />
+        <vm:StateToVisibleConverter x:Key="stateToVisibleConverter" />
+
+    </Page.Resources>
+
+    <Grid>
+
+        <ScrollViewer x:Name="scrollViewer"
+                ZoomMode="Enabled" 
+                MaxZoomFactor="2"
+                HorizontalScrollBarVisibility="Auto" 
+                VerticalScrollBarVisibility="Auto" 
+                HorizontalContentAlignment="Center" 
+                VerticalContentAlignment="Center" 
+                IsEnabled="{Binding CurrentState, Converter={StaticResource stateToEnableConverter}, ConverterParameter=ScaleElement, Source={StaticResource imageDataContext}}">
+
+            <Image  x:Name="imageView" 
+                            Source="{Binding Path=Image, Mode=TwoWay, Source={StaticResource imageDataContext}}" 
+                            RenderTransformOrigin="0.5,0.5" 
+                            HorizontalAlignment="Center" 
+                            VerticalAlignment="Center"
+                            >
+                <Image.RenderTransform>
+                    <CompositeTransform x:Name="compositeTransform" />
+                </Image.RenderTransform>
+            </Image>
+        </ScrollViewer>
+
+        <v:CropControl x:Name="cropControl" 
+                Visibility="{Binding Path=CurrentState, ConverterParameter=CropElement, Converter={StaticResource stateToVisibleConverter}, Source={StaticResource imageDataContext}}"
+                Width="400" Height="580" HorizontalAlignment="Left" VerticalAlignment="Top" />
+
+        <Button x:Name="settingbtn" Content="{Binding Language,Source={StaticResource imageDataContext}}"
+                HorizontalAlignment="Right" VerticalAlignment="Top" 
+                Background="{x:Null}"  Height="45" Style="{StaticResource FlatStyle}" 
+                Margin="0,10,10,0" BorderThickness="0" MinWidth="100" FontSize="21.333"
+                MinHeight="0">
+            <Button.Flyout>
+                <ListPickerFlyout x:Name="listpickerflyout" ItemsPicked="ListPickerFlyOutPicker">
+                    <ListPickerFlyout.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding }" HorizontalAlignment="Left" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListPickerFlyout.ItemTemplate>
+                </ListPickerFlyout>
+            </Button.Flyout>
+        </Button>
+    </Grid>
+
+    <Page.BottomAppBar>
+        <CommandBar Background="White" Foreground="{StaticResource TurquoiseFlatButton}">
+            <CommandBar.PrimaryCommands>
+                <AppBarButton x:Name="browseBtn" Label="Browse" Icon="BrowsePhotos" Click="browseBtn_Click" />
+                <AppBarButton x:Name="cropBtn" Label="Crop" Icon="Crop" Click="cropBtn_Click" />
+                <AppBarButton x:Name="regcognizeBtn" Label="Scan" Icon="Forward" Click="regcognizeBtn_Click" />
+            </CommandBar.PrimaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
+</Page>
