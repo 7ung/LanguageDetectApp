@@ -77,7 +77,7 @@ namespace LanguageDetectApp
 
             // gán static resouce bên mainpage.xaml để xài
             _imageViewModel = Resources["imageDataContext"] as ImageRecognizeViewModel; 
-            listpickerflyout.ItemsSource = Util.AvailableCountries.Values;
+            //listpickerflyout.ItemsSource = Util.AvailableCountries.Values;
             //int language = Convert.ToInt32(LocalSettingHelper.GetLocalSettingValue(LocalSettingHelper.RecogLanguageKey));
             //settingbtn.Content = Enum.Parse (typeof(OcrLanguage),LocalSettingHelper.GetLocalSettingValue(LocalSettingHelper.RecogLanguageKey).ToString());
             _imageViewModel.Language = (OcrLanguage) Enum.Parse(

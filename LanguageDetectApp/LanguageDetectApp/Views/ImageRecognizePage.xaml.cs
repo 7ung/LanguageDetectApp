@@ -26,16 +26,34 @@ using WindowsPreview.Media.Ocr;
 
 namespace LanguageDetectApp.Views
 {
+    public enum eState
+    {
+        Crop,
+        Scale
+    }
+
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class ImageRecognizePage : Page, IFileOpenPickerContinuable
     {
+        public static ImageRecognizePage Current;
+        List<Scenario> scenarios = new List<Scenario>
+        {
+        };
+
+        public List<Scenario> Scenarios
+        {
+            get { return this.scenarios; }
+        }
+
         private ImageRecognizeViewModel _imageViewModel;
 
         #region Constructor & OnNavigate
         public ImageRecognizePage()
         {
+            Current = this;
+
             this.InitializeComponent();
             this.NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Required;
             // gán static resouce bên xaml để xài
@@ -262,6 +280,11 @@ namespace LanguageDetectApp.Views
         private void scrollViewer_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
             CaculateMinScale(true);
+        }
+
+        private void settingBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(Settings));
         }
     }
 }

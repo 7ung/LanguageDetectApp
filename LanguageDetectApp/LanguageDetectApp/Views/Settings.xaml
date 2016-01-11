@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{StaticResource TurquoiseFlatButton}" Foreground="White">
 
     <Grid>
         <Grid.RowDefinitions >
@@ -14,8 +14,8 @@
             <RowDefinition Height="Auto"/>
 
         </Grid.RowDefinitions>
-        <TextBlock Text="Setting" Grid.Row="0"
-                   Style="{StaticResource HeaderTextBlockStyle}"/>
+        <TextBlock Text="Settings" Grid.Row="0"
+                   Style="{StaticResource HeaderTextBlockStyle}" Margin="10,0,0,0"/>
         <ScrollViewer Grid.Row="1" >
 
             <StackPanel >
@@ -28,7 +28,7 @@
 
                         <TextBlock Text="Use Physical Location" Grid.Column="0" VerticalAlignment="Center"
                             Margin="10,0,5,0"
-                            Style="{StaticResource ListViewItemTextBlockStyle}" FontSize="24"/>
+                            Style="{StaticResource ListViewItemTextBlockStyle}" FontSize="21.333"/>
 
                         <ToggleSwitch Name="geoLocalSwitchToggle" Grid.Column="1" Margin="20,0,20,0" 
                                   HorizontalAlignment="Right" VerticalAlignment="Top"
@@ -65,12 +65,12 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Language To Rocognize" Grid.Column="0" VerticalAlignment="Center"
                                    Margin="10,0,5,0"
-                                   Style="{StaticResource ListViewItemTextBlockStyle}" FontSize="24"/>
+                                   Style="{StaticResource ListViewItemTextBlockStyle}" FontSize="21.333"/>
                         <Button x:Name="langRecog"
                             HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="1"
-                            Background="#FF1DD2AF"  Height="45" Style="{StaticResource FlatStyle}" 
-                            Margin="10,5,20,5" BorderThickness="0" MinWidth="100" FontSize="21.333"
-                            MinHeight="0">
+                            Background="{x:Null}"  Height="45" Style="{StaticResource FlatStyle}" 
+                            Margin="10,5,20,5" BorderThickness="2.5" MinWidth="100" FontSize="21.333"
+                            MinHeight="0" Foreground="#FF383838">
                             <Button.Flyout>
                                 <ListPickerFlyout x:Name="listpickerflyout1" ItemsPicked="ListPickerFlyOut1Picker">
                                     <ListPickerFlyout.ItemTemplate>
@@ -98,11 +98,11 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Language To Translate" Grid.Column="0" VerticalAlignment="Center"
                                    Margin="10,0,5,0"
-                                   Style="{StaticResource ListViewItemTextBlockStyle}" FontSize="24"/>
+                                   Style="{StaticResource ListViewItemTextBlockStyle}" FontSize="21.333"/>
                         <Button x:Name="langtoTranslate"
                             HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="1"
-                            Background="#FF1DD2AF"  Height="45" Style="{StaticResource FlatStyle}" 
-                            Margin="10,5,20,5" BorderThickness="0" MinWidth="100" FontSize="21.333"
+                            Background="{x:Null}"  Height="45" Style="{StaticResource FlatStyle}" 
+                            Margin="10,5,20,5" BorderThickness="2.5" MinWidth="100" FontSize="21.333"
                             MinHeight="0">
                             <Button.Flyout>
                                 <ListPickerFlyout x:Name="listpickerflyout2" ItemsPicked="ListPickerFlyOut2Picker">

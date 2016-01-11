@@ -59,6 +59,7 @@ namespace LanguageDetectApp.Views
             _fileViewModel = Resources["filesSource"] as FileViewModel;
             _saveFile = Resources["saveFileSource"] as FileModel;
 
+            _fileViewModel.Clear();
             await _fileViewModel.GetStorageFolder();
             await _fileViewModel.GetFiles();
 
@@ -146,6 +147,11 @@ namespace LanguageDetectApp.Views
                     await _fileViewModel.Delete(model);
                 }
             }
+        }
+
+        private void settingBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(Settings));
         }
     }
 }

@@ -71,6 +71,9 @@
                 <AppBarButton x:Name="cropBtn" Label="Crop" Icon="Crop" Click="cropBtn_Click" IsEnabled="False" />
                 <AppBarButton x:Name="regcognizeBtn" Label="Scan" Icon="Forward" Click="regcognizeBtn_Click" IsEnabled="False" />
             </CommandBar.PrimaryCommands>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Name="settingBtn" Label="Settings" Click="settingBtn_Click"></AppBarButton>
+            </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.BottomAppBar>
 </Page>

@@ -94,7 +94,7 @@
             <CommandBar.SecondaryCommands>
                 <AppBarButton Label="Save Contact" Click="addContactClick"/>
                 <AppBarButton x:Name="saveTranslated" Label="Save Translated Content" Click="saveTranslated_Click" IsEnabled="False" />
-                <AppBarButton Label="Setting" />
+                <AppBarButton Name="settingBtn" Label="Setting" Click="settingBtn_Click" />
             </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.BottomAppBar>

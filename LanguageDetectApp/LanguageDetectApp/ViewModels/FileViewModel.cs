@@ -46,7 +46,7 @@ namespace LanguageDetectApp.ViewModels
         {
             try
             {
-
+                
                 var files = await SavedFolder.GetFilesAsync();
                 // Tùng: for each thì không cần check any
                 //if (files.Any())

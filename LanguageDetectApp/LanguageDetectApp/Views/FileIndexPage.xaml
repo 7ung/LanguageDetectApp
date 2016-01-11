@@ -71,6 +71,10 @@
                 <AppBarButton x:Name="saveBtn" Label="Save" Icon="Save" Click="saveBtn_Click" />
                 <AppBarButton x:Name="cancelBtn" Label="Cancel" Icon="Cancel" Click="cancelBtn_Click" />
             </CommandBar.PrimaryCommands>
+
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Name="settingBtn" Label="Settings" Click="settingBtn_Click"></AppBarButton>
+            </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.BottomAppBar>
 </Page>

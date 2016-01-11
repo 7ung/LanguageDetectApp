@@ -273,6 +273,11 @@ namespace LanguageDetectApp.Views
 
             Frame.Navigate(typeof(FileIndexPage), model);
         }
+
+        private void settingBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(Settings));
+        }
     }
  
 

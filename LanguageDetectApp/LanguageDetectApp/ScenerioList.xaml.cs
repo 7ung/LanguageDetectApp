@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft. All rights reserved. 
 
 using LanguageDetectApp.Model;
+using LanguageDetectApp.Views;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -40,7 +41,7 @@ namespace LanguageDetectApp
 
             if (s != null)
             {
-                Frame scenarioFrame = MainPage.Current.FindName("ScenarioFrame") as Frame;
+                Frame scenarioFrame = ImageRecognizePage.Current.FindName("ScenarioFrame") as Frame;
                 scenarioFrame.Navigate(s.ClassType);
             }
 
@@ -59,7 +60,7 @@ namespace LanguageDetectApp
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             Scenario s = value as Scenario;
-            return (MainPage.Current.Scenarios.IndexOf(s) + 1) + ") " + s.Title;
+            return (ImageRecognizePage.Current.Scenarios.IndexOf(s) + 1) + ") " + s.Title;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
