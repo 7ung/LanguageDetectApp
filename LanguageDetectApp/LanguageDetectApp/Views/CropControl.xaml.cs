@@ -48,6 +48,10 @@ namespace LanguageDetectApp.Views
         public void End()
         {
             cropRect.Visibility = Visibility.Collapsed;
+            Canvas.SetLeft(cropRect, 0);
+            Canvas.SetTop(cropRect, 0);
+            cropRect.Width = 0;
+            cropRect.Height = 0;
 
             //hide
             cropPoint1.Visibility = Visibility.Collapsed;

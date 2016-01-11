@@ -151,6 +151,7 @@ namespace LanguageDetectApp.Views
 
             // ẩn
             _imageViewModel.CurrentState = eState.Scale;
+            cropControl.End();
 
             // đọc hình
             await _imageViewModel.RecognizeImage();
