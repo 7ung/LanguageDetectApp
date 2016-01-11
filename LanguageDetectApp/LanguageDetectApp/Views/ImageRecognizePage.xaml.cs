@@ -10,6 +10,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Phone.UI.Input;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -32,6 +33,7 @@ namespace LanguageDetectApp.Views
     {
         private ImageRecognizeViewModel _imageViewModel;
 
+        #region Constructor & OnNavigate
         public ImageRecognizePage()
         {
             this.InitializeComponent();
@@ -44,15 +46,42 @@ namespace LanguageDetectApp.Views
             _imageViewModel.Language = (OcrLanguage)Enum.Parse(
                 typeof(OcrLanguage),
                 LocalSettingHelper.GetLocalSettingValue(LocalSettingHelper.RecogLanguageKey).ToString());
+
+            HardwareButtons.BackPressed += hardwareButtons_BackPressed;
         }
-        
+
+        private void hardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
+        {
+            e.Handled = true;
+
+            if(_imageViewModel.CurrentState == eState.Crop)
+            {
+                _imageViewModel.CurrentState = eState.Scale;
+                cropControl.End();
+            }
+            else
+            {
+                App.Current.Exit();
+            }
+        }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             CharacterRecognizeModel.Clear();
-            if (regcognizeBtn.IsEnabled == false)
+
+            // quay về home không cho nó quay lại frame trước nữa
+            Frame.BackStack.Clear();
+
+            if (imageView.Source == null)
+            {
+                regcognizeBtn.IsEnabled = false;
+                cropBtn.IsEnabled = false;
+            }
+            else
             {
                 regcognizeBtn.IsEnabled = true;
-        }
+                cropBtn.IsEnabled = true;
+            }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -61,6 +90,7 @@ namespace LanguageDetectApp.Views
 
             _imageViewModel.CurrentState = eState.Scale;
         }
+
         // được gọi khi chọn được hình ảnh và chuyển lại vào page này
         public async void ContinueFileOpenPicker(FileOpenPickerContinuationEventArgs args)
         {
@@ -69,11 +99,16 @@ namespace LanguageDetectApp.Views
                 _imageViewModel.Path = args.Files.First().Path;
                 imageView.Source = await Util.LoadImage(args.Files.First());
 
+                // enable btn
+                cropBtn.IsEnabled = true;
+                regcognizeBtn.IsEnabled = true;
+
                 // set lại scale nhỏ nhất
                 CaculateMinScale(true);
             }
         }
         #endregion
+
         private void browseBtn_Click(object sender, RoutedEventArgs e)
         {
             FileOpenPicker fileopenpicker = new FileOpenPicker();
@@ -101,6 +136,7 @@ namespace LanguageDetectApp.Views
                 return;
         }
             (sender as Button).IsEnabled = false;
+
             // crop hình
             CropImage();
 

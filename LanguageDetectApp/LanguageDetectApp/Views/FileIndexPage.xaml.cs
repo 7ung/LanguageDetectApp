@@ -100,7 +100,7 @@ namespace LanguageDetectApp.Views
         {
             // Clear frame trước khi chuyển tới home
             Frame.BackStack.Clear();
-            Frame.Navigate(typeof(MainPage));
+            Frame.Navigate(typeof(ImageRecognizePage));
         }
 
         private void cancelBtn_Click(object sender, RoutedEventArgs e)
