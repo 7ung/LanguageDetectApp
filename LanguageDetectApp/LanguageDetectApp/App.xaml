@@ -644,6 +644,13 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style x:Key="labeldescription" TargetType="TextBlock">
+            <Setter Property="TextWrapping" Value="WrapWholeWords"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="TextAlignment" Value="Justify"/>
+            <Setter Property="Margin" Value="20,0,20,0"/>
+        </Style>
     </Application.Resources>
 
 </Application>

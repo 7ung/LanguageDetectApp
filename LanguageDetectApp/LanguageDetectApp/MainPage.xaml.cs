@@ -347,11 +347,6 @@ namespace LanguageDetectApp
 
         }
 
-        private void SettingClick(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
         private void ListPickerFlyOutPicker(ListPickerFlyout sender, ItemsPickedEventArgs args)
         {
             var items = args.AddedItems;

@@ -44,7 +44,7 @@ namespace LanguageDetectApp.Model
             {"KR",OcrLanguage.Korean},
             {"ES",OcrLanguage.Spanish},
             {"FR",OcrLanguage.French},
-            {"GB",OcrLanguage.English},
+            {"EN",OcrLanguage.English},
         };
 
         public static async Task<WriteableBitmap> LoadImage(StorageFile file)

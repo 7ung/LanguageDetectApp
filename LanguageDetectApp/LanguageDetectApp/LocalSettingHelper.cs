@@ -11,7 +11,8 @@ namespace LanguageDetectApp
         public static readonly string AllowGPSKey = "AllowGPS";
         public static readonly string RecogLanguageKey = "RecognizeLanguage";
         public static readonly string LanguageTranslateTo = "TranslateTo";
-
+        public static readonly string SaveOnSdCard = "SaveOnSdCard";
+        
         public static bool IsExistsLocalSettingKey(string key)
         {
             var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
@@ -29,5 +30,6 @@ namespace LanguageDetectApp
             var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
             return localSettings.Values[key];
         }
+
     }
 }

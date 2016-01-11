@@ -133,17 +133,25 @@ namespace LanguageDetectApp
                 //    throw new Exception("Failed to create initial page");
                 //}
 
-                if (!rootFrame.Navigate(typeof(ImageRecognizePage), e.Arguments))
+                if (!rootFrame.Navigate(typeof(Settings), e.Arguments))
                 {
                     throw new Exception("Failed to create initial page");
                 }
             }
 
             await initContactStore();
-
+            initSdCardValue();
 
             // Ensure the current window is active
             Window.Current.Activate();
+        }
+
+        private void initSdCardValue()
+        {
+            if (LocalSettingHelper.IsExistsLocalSettingKey(LocalSettingHelper.SaveOnSdCard) == false)
+            {
+                LocalSettingHelper.SetLocalSettingKeyValue(LocalSettingHelper.SaveOnSdCard, true);
+            }
         }
 
         private async Task initRecognizeLanguage()

@@ -1,0 +1,129 @@
+﻿<Page
+    x:Class="LanguageDetectApp.Views.Settings"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LanguageDetectApp.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions >
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="Auto"/>
+
+        </Grid.RowDefinitions>
+        <TextBlock Text="Setting" Grid.Row="0"
+                   Style="{StaticResource HeaderTextBlockStyle}"/>
+        <ScrollViewer Grid.Row="1" >
+
+            <StackPanel >
+                <StackPanel >
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="270*"/>
+                            <ColumnDefinition Width="130*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="Use Physical Location" Grid.Column="0" VerticalAlignment="Center"
+                            Margin="10,0,5,0"
+                            Style="{StaticResource ListViewItemTextBlockStyle}" FontSize="24"/>
+
+                        <ToggleSwitch Name="geoLocalSwitchToggle" Grid.Column="1" Margin="20,0,20,0" 
+                                  HorizontalAlignment="Right" VerticalAlignment="Top"
+                                  Toggled="GeoLocateToggleSwitch_Toggled"  />
+                    </Grid>
+                    <TextBlock Grid.Column="0"
+                        Text="This application use geolocation feature to improve your experience. You can turn it off to save bettery."
+                        Style="{StaticResource labeldescription}"/>
+                </StackPanel>
+
+                <StackPanel Margin="0,10,0,0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="270*"/>
+                            <ColumnDefinition Width="130*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Save on SD card" Grid.Column="0" VerticalAlignment="Center"
+                                   Margin="10,0,5,0"
+                                   Style="{StaticResource ListViewItemTextBlockStyle}" FontSize="24"/>
+                        <ToggleSwitch Name="SdCardSwitchToggle" Grid.Column="1" Margin="20,0,20,0" 
+                                      HorizontalAlignment="Right" Toggled="SaveSDCardSwitch_Toggled"/>
+                    </Grid>
+                    <TextBlock Grid.Column="0"
+                        Text="When this toogle is on, your files will be saved on sd card. Otherwise they will be saved on your device."
+                        Style="{StaticResource labeldescription}"/>
+
+                </StackPanel>
+
+                <StackPanel Margin="0,10,0,0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="270*"/>
+                            <ColumnDefinition Width="130*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Language To Rocognize" Grid.Column="0" VerticalAlignment="Center"
+                                   Margin="10,0,5,0"
+                                   Style="{StaticResource ListViewItemTextBlockStyle}" FontSize="24"/>
+                        <Button x:Name="langRecog"
+                            HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="1"
+                            Background="#FF1DD2AF"  Height="45" Style="{StaticResource FlatStyle}" 
+                            Margin="10,5,20,5" BorderThickness="0" MinWidth="100" FontSize="21.333"
+                            MinHeight="0">
+                            <Button.Flyout>
+                                <ListPickerFlyout x:Name="listpickerflyout1" ItemsPicked="ListPickerFlyOut1Picker">
+                                    <ListPickerFlyout.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding }" HorizontalAlignment="Left" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListPickerFlyout.ItemTemplate>
+                                </ListPickerFlyout>
+                            </Button.Flyout>
+                        </Button>
+
+                    </Grid>
+                    <TextBlock Grid.Column="0"
+                        Text="This language use to engine recognize word from image. Be sure this is language you wish."
+                        Style="{StaticResource labeldescription}"/>
+
+                </StackPanel>
+                <StackPanel Margin="0,10,0,0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="270*"/>
+                            <ColumnDefinition Width="130*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Language To Translate" Grid.Column="0" VerticalAlignment="Center"
+                                   Margin="10,0,5,0"
+                                   Style="{StaticResource ListViewItemTextBlockStyle}" FontSize="24"/>
+                        <Button x:Name="langtoTranslate"
+                            HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="1"
+                            Background="#FF1DD2AF"  Height="45" Style="{StaticResource FlatStyle}" 
+                            Margin="10,5,20,5" BorderThickness="0" MinWidth="100" FontSize="21.333"
+                            MinHeight="0">
+                            <Button.Flyout>
+                                <ListPickerFlyout x:Name="listpickerflyout2" ItemsPicked="ListPickerFlyOut2Picker">
+                                    <ListPickerFlyout.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding }" HorizontalAlignment="Left" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListPickerFlyout.ItemTemplate>
+                                </ListPickerFlyout>
+                            </Button.Flyout>
+                        </Button>
+                    </Grid>
+                    <TextBlock Grid.Column="0"
+                        Text="This is destiny language in translation. You can set it after word's recognized."
+                        Style="{StaticResource labeldescription}"/>
+
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+    </Grid>
+</Page>
