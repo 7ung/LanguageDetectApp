@@ -18,7 +18,6 @@ Hồ Hoàng Tùng:
       
 		gmail: hohoangtung12a3@gmail.com
       
-      
 		facebook: facebook.com/job.stevie
 
 		git: github.com/7ung
