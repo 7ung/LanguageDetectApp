@@ -30,7 +30,7 @@ Hồ Hoàng Tùng:
       
 		facebook: facebook.com/Eric1495
 
-	    	git: https://github.com/LuuTheVinh
+		git: https://github.com/LuuTheVinh
 
 
 Chương trình cung cấp chức năng nhận diện văn bản bằng hình ảnh, áp dụng vào nhiều mục đích gần gũi trong cuộc sống.
