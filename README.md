@@ -4,16 +4,16 @@
 
 Đồ án môn học:
 	
-Lập Trình Trên Thiêt Bị Di Động
+	Lập Trình Trên Thiêt Bị Di Động
 	
-Nhập Môn Phần Mềm Và Hệ Thống Nhúng
+	Nhập Môn Phần Mềm Và Hệ Thống Nhúng
   
 
 
 Nhóm sinh viên thực hiện:
 
     
-	Hồ Hoàng Tùng:
+Hồ Hoàng Tùng:
       
       
 		gmail: hohoangtung12a3@gmail.com
