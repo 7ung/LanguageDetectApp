@@ -15,10 +15,7 @@ Nhóm sinh viên thực hiện:
     
 Hồ Hoàng Tùng:
       
-      
 		gmail: hohoangtung12a3@gmail.com
-      
-		facebook: facebook.com/job.stevie
 
 		git: github.com/7ung
 
@@ -26,8 +23,6 @@ Hồ Hoàng Tùng:
   Lưu Thế Vinh:
   
 		gmail: luuthevinh7@gmail.com
-      
-		facebook: facebook.com/Eric1495
 
 		git: https://github.com/LuuTheVinh
 
