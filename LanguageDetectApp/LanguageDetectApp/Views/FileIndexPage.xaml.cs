@@ -60,9 +60,10 @@ namespace LanguageDetectApp.Views
             _saveFile = Resources["saveFileSource"] as FileModel;
 
             _fileViewModel.Clear();
-            await _fileViewModel.GetStorageFolder();
-            await _fileViewModel.GetFiles();
-
+            var task1 = _fileViewModel.GetStorageFolder();
+            var task2 = _fileViewModel.GetFiles();
+            await Task.WhenAll(task1, task2);
+            
             var savefile = e.Parameter as FileModel;
             if (savefile != null)
             {
